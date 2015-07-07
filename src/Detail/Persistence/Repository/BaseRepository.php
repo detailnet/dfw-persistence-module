@@ -39,7 +39,7 @@ abstract class BaseRepository implements
                 if (is_array($sort)) {
                     if (!isset($sort['property'])) {
                         throw new Exception\InvalidArgumentException(
-                            'Invalid sorting definition; array must contain \'property\' key'
+                            'Invalid sorting definition; array must contain "property" key'
                         );
                     }
 
