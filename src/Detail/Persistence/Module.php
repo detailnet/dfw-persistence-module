@@ -79,13 +79,9 @@ class Module implements
     /**
      * {@inheritdoc}
      */
-    public function getConfig($withoutServiceManager = true)
+    public function getConfig()
     {
         $config = include __DIR__ . '/../../../config/module.config.php';
-
-        if ($withoutServiceManager !== false) {
-            unset($config['service_manager']);
-        }
 
         return $config;
     }
