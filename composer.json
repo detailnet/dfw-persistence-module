@@ -31,7 +31,17 @@
         "phpunit/phpunit": "~4.6",
         "squizlabs/php_codesniffer" : "~2.3",
         "phpmd/phpmd": "~2.2",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "detailnet/dfw-commanding": "~0.2.3",
+        "zendframework/zend-paginator": "2.*",
+        "doctrine/orm": "~2.4",
+        "doctrine/mongodb-odm": "~1.0.0-beta13@dev"
+    },
+    "suggest": {
+        "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
+        "zendframework/zend-paginator": "For usage of the Doctrine ORM/ODM based repositories",
+        "doctrine/orm": "For usage of the Doctrine ORM based repository",
+        "doctrine/mongodb-odm": "For usage of the Doctrine ODM based repository"
     },
     "autoload": {
         "psr-0": {
