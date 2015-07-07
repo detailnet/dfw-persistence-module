@@ -4,7 +4,6 @@ namespace Detail\Persistence\Factory\Doctrine;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-//use Application\Core\Domain\InputFilter;
 use Detail\Persistence\Repository\DocumentRepositoryInterface;
 use Detail\Persistence\Exception;
 

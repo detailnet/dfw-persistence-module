@@ -33,6 +33,7 @@
         "phpmd/phpmd": "~2.2",
         "satooshi/php-coveralls": "dev-master",
         "detailnet/dfw-commanding": "~0.2.3",
+        "detailnet/dfw-filtering": "~0.1.0",
         "zendframework/zend-paginator": "2.*",
         "doctrine/orm": "~2.4",
         "doctrine/mongodb-odm": "1.0.*@dev",
@@ -40,6 +41,7 @@
     },
     "suggest": {
         "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
+        "detailnet/dfw-filtering": "For usage of the Doctrine ORM/ODM based repositories",
         "zendframework/zend-paginator": "For usage of the Doctrine ORM/ODM based repositories",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",

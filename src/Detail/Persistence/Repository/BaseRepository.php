@@ -4,24 +4,25 @@ namespace Detail\Persistence\Repository;
 
 use Detail\Commanding\Command\Listing\Sort;
 
-//use Application\Core\Domain\InputFilter;
+use Detail\Filtering\InputFilter;
+
 use Detail\Persistence\Exception;
 
 abstract class BaseRepository implements
-//    InputFilter\FilterAwareInterface,
+    InputFilter\FilterAwareInterface,
     RepositoryInterface
 {
-//    use InputFilter\FilterAwareTrait;
+    use InputFilter\FilterAwareTrait;
 
-//    const FILTER_CREATE = 'create';
-//    const FILTER_UPDATE = 'update';
+    const FILTER_CREATE = 'create';
+    const FILTER_UPDATE = 'update';
 
     /**
      * @param array $inputFilters
      */
     public function __construct(array $inputFilters = array())
     {
-//        $this->setInputFilters($inputFilters);
+        $this->setInputFilters($inputFilters);
     }
 
     /**

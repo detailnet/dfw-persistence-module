@@ -283,9 +283,6 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 //        }
 //
 //        $queryBuilder->where($queryBuilder->expr()->eq('id', $entity->getId()));
-//
-//        die($queryBuilder->getQuery()->getDQL());
-//        // DELETE Application\Asset\WebModule\Entity\Asset asset WHERE id = 96
     }
 
     /**
