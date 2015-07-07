@@ -14,20 +14,21 @@ class ModuleOptionsTest extends OptionsTestCase
         $this->options = $this->getOptions(
             'Detail\Persistence\Options\ModuleOptions',
             array(
-//                'getEncryptor',
-//                'setEncryptor',
+                'getDoctrine',
+                'setDoctrine',
             )
         );
     }
 
-//    public function testEncryptorCanBeSet()
-//    {
-//        $encryptor = 'Some\Encryptor\Class';
-//
-//        $this->assertNull($this->options->getEncryptor());
-//
-//        $this->options->setEncryptor($encryptor);
-//
-//        $this->assertEquals($encryptor, $this->options->getEncryptor());
-//    }
+    public function testDoctrineCanBeSet()
+    {
+        $doctrine = array('register_uuid_type' => true);
+
+        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
+        $this->assertFalse($this->options->getDoctrine()->registerUuidType());
+
+        $this->options->setDoctrine($doctrine);
+
+        $this->assertTrue($this->options->getDoctrine()->registerUuidType());
+    }
 }
