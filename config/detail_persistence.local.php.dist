@@ -2,5 +2,8 @@
 
 return array(
     'detail_persistence' => array(
+        'doctrine' => array(
+            'register_uuid_type' => true,
+        ),
     ),
 );
