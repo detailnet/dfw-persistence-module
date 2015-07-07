@@ -82,10 +82,10 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $paginatorAdapter = new CallbackPaginatorAdapter(
-            function() use ($criteria, $orderBy, $limit, $offset) {
+            function () use ($criteria, $orderBy, $limit, $offset) {
                 return $this->createSelectQuery(null, $criteria, $orderBy, $limit, $offset)->getResult();
             },
-            function() use ($criteria) {
+            function () use ($criteria) {
                 return $this->size($criteria);
             }
         );
@@ -138,7 +138,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $identifiers = array();
 
         // Group provided values by identifier they belong to
-        $addIdentifier = function($key, $value) use (&$identifiers, $metadata) {
+        $addIdentifier = function ($key, $value) use (&$identifiers, $metadata) {
             /** @todo If it's no scalar, cast to string */
 
 //            if (!is_scalar($value)) {
@@ -328,11 +328,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $entityMeta = $this->getEntityMetadata();
         $alias      = $this->getEntityAlias();
 
-        $isAssociation = function($field) use ($entityMeta) {
+        $isAssociation = function ($field) use ($entityMeta) {
             return in_array($field, $entityMeta->getAssociationNames());
         };
 
-        $isManyToManyAssociation = function($field) use ($entityMeta) {
+        $isManyToManyAssociation = function ($field) use ($entityMeta) {
             try {
                 $mapping = $entityMeta->getAssociationMapping($field);
 
@@ -342,11 +342,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             }
         };
 
-        $convertSnakeToCamel = function($input) {
+        $convertSnakeToCamel = function ($input) {
             return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
         };
 
-        $getField = function($field, $withAlias = true) use ($alias, $isAssociation, $entityMeta, $convertSnakeToCamel) {
+        $getField = function ($field, $withAlias = true) use ($alias, $isAssociation, $entityMeta, $convertSnakeToCamel) {
             // The field might be named after the column (snake case)..
             try {
                 $field = $entityMeta->getFieldForColumn($field);
@@ -379,7 +379,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                     $field    = $filter->getProperty();
                     $operator = $this->getQueryOperator($filter);
                     $value    = $filter->getValue();
-                } else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     $operator = 'in';
                 }
 

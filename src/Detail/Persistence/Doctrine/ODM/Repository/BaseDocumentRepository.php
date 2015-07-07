@@ -36,7 +36,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
      * @param DocumentRepository $repository
      * @param array $inputFilters
      */
-    public function __construct(DocumentRepository $repository , array $inputFilters = array())
+    public function __construct(DocumentRepository $repository, array $inputFilters = array())
     {
         parent::__construct($inputFilters);
 
@@ -70,7 +70,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $paginatorAdapter = new CallbackPaginatorAdapter(
-            function() use ($criteria, $orderBy, $limit, $offset) {
+            function () use ($criteria, $orderBy, $limit, $offset) {
                 /** @var \Doctrine\ODM\MongoDB\Cursor $results */
                 $results = $this->createSelectQuery($criteria, $orderBy, $limit, $offset)->execute();
 
@@ -78,7 +78,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
                 return $results->toArray(false);
 
             },
-            function() use ($criteria) {
+            function () use ($criteria) {
                 return $this->size($criteria);
             }
         );
@@ -227,7 +227,8 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     {
         if ($this->fields === null) {
             $dm = $this->repository->getDocumentManager();
-            $entityMeta = $dm->getClassMetadata($this->repository->getDocumentName()); /** @todo Investigate if produces performance problems */
+            /** @todo Investigate if produces performance problems */
+            $entityMeta = $dm->getClassMetadata($this->repository->getDocumentName());
 
             foreach ($entityMeta->fieldMappings as $fieldName => $fieldMapping) {
                 $this->fields[$fieldMapping['name']] = $fieldName;
