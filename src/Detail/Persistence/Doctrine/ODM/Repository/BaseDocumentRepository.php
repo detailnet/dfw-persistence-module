@@ -31,7 +31,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     /**
      * @var array
      */
-    private $fields = array();
+    private $fields;
 
     /**
      * @param DocumentRepository $repository

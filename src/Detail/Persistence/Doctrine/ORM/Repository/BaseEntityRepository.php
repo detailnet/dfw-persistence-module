@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata as EntityMetadata;
 use Doctrine\ORM\Mapping\MappingException as DoctrineMappingException;
 use Doctrine\ORM\Mapping\ClassMetadataInfo as DoctrineAssociationType;
+use Doctrine\ORM\QueryBuilder;
 
 use Zend\Paginator\Adapter\Callback as CallbackPaginatorAdapter;
 
@@ -111,13 +112,13 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      */
     public function findByIdentifiers(array $identifiers)
     {
-        $i = 0;
+        $identifierIndex = 0;
         $alias = $this->getEntityAlias();
         $queryBuilder = $this->getEntityRepository()->createQueryBuilder($alias);
 
         foreach ($identifiers as $key => $values) {
-            $queryBuilder->orWhere(sprintf('%s.%s IN (:p%s)', $alias, $key, ++$i))
-                ->setParameter('p' . $i, $values);
+            $queryBuilder->orWhere(sprintf('%s.%s IN (:p%s)', $alias, $key, ++$identifierIndex))
+                ->setParameter('p' . $identifierIndex, $values);
         }
 
         return $queryBuilder->getQuery()->execute();
@@ -126,7 +127,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     /**
      * Get entities by identifier.
      *
-     * Note that the order of the returned entities mustn't match the provided order.
+     * Note that the order of the returned entities may not match the provided order.
      *
      * @param mixed $values Entity identifier or the entity (or a listing of those)
      * @return array
@@ -176,23 +177,10 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             if (is_a($value, $metadata->name)) {
                 // If already instance of resulting type, pass trough without query to db
                 $entities[] = $value;
-
                 continue;
             }
 
-            $identifier = $this->getIdentifier($value);
-
-            // When no identifier is provided, use repository's primary (single) identifier
-            if ($identifier === null) {
-                // Only assign identifier when value matches the identifiers configured type
-                // to prevent false-positives (i.e. when providing a string and identifier is integer).
-                $expectedType = is_string($value) ? 'string' : null;
-                $expectedType = is_numeric($value) ? 'numeric' : $expectedType;
-
-                if ($expectedType !== null) {
-                    $identifier = $this->getSingleIdentifier($expectedType);
-                }
-            }
+            $identifier = $this->getIdentifierForValue($value);
 
             // We don't fail when we couldn't find an identifier the value belongs to.
             // It's as if the unknown identifier was never provided in the first place...
@@ -325,120 +313,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $limit = null,
         $offset = null
     ) {
-        $entityMeta = $this->getEntityMetadata();
-        $alias      = $this->getEntityAlias();
-
-        $isAssociation = function ($field) use ($entityMeta) {
-            return in_array($field, $entityMeta->getAssociationNames());
-        };
-
-        $isManyToManyAssociation = function ($field) use ($entityMeta) {
-            try {
-                $mapping = $entityMeta->getAssociationMapping($field);
-
-                return $mapping['type'] === DoctrineAssociationType::MANY_TO_MANY;
-            } catch (DoctrineMappingException $e) {
-                return false;
-            }
-        };
-
-        $convertSnakeToCamel = function ($input) {
-            return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
-        };
-
-        $getField = function ($field, $withAlias = true) use ($alias, $isAssociation, $entityMeta, $convertSnakeToCamel) {
-            // The field might be named after the column (snake case)..
-            try {
-                $field = $entityMeta->getFieldForColumn($field);
-            } catch (DoctrineMappingException $e) {
-                // It might also be an association
-                $camelField = $convertSnakeToCamel($field);
-
-                if ($isAssociation($camelField)) {
-                    $field = $camelField;
-                }
-            }
-
-            return $withAlias === false ? $field : sprintf('%s.%s', $alias, $field);
-        };
-
-        $queryBuilder = $this->getEntityRepository()->createQueryBuilder($alias);
-
-        if ($select !== null) {
-            $queryBuilder->select($select);
-        }
+        $alias = $this->getEntityAlias();
+        $queryBuilder = $this->createQueryBuilder($alias, $select);
 
         if ($criteria !== null && count($criteria) > 0) {
-            $and = $queryBuilder->expr()->andX();
-
-            foreach ($criteria as $field => $value) {
-                $operator = 'eq';
-
-                if ($value instanceof Filter) {
-                    $filter   = $value;
-                    $field    = $filter->getProperty();
-                    $operator = $this->getQueryOperator($filter);
-                    $value    = $filter->getValue();
-                } elseif (is_array($value)) {
-                    $operator = 'in';
-                }
-
-                if (!is_callable(array($queryBuilder->expr(), $operator))) {
-                    throw new Exception\RuntimeException(
-                        sprintf('Unsupported filter operator "%s"', $operator)
-                    );
-                }
-
-                /** @todo This can surely be refactored to a simpler form... */
-                $conditions = array();
-
-                switch ($operator) {
-                    // Operators without value
-                    case 'isNull':
-                    case 'isNotNull':
-                        $conditions[] = $queryBuilder->expr()->$operator($getField($field));
-                        break;
-                    // Operators with value
-                    default:
-                        $param = sprintf(':%s', $getField($field, false));
-
-                        // Only for many-to-many associations we have to use the MEMBER OF operation
-                        if ($isManyToManyAssociation($getField($field, false)) && $operator = 'in') {
-                            /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
-
-                            if (!is_array($value)) {
-                                $value = array($value);
-                            }
-
-                            foreach ($value as $i => $v) {
-                                $p = $param . $i;
-
-                                // No query builder method yet for MEMBER OF operation
-                                $conditions[] = sprintf('%s MEMBER OF %s', $p, $getField($field));
-                                $queryBuilder->setParameter($p, $v);
-                            }
-                        } else {
-                            $conditions[] = $queryBuilder->expr()->$operator($getField($field), $param);
-                            $queryBuilder->setParameter($param, $value);
-                        }
-                        break;
-                }
-
-                if (count($conditions) === 1) {
-                    $and->add($conditions[0]);
-                } else {
-                    // Multiple (sub-)conditions for a single field are combined with OR
-                    $or = $queryBuilder->expr()->orX();
-
-                    foreach ($conditions as $condition) {
-                        $or->add($condition);
-                    }
-
-                    $and->add($or);
-                }
-            }
-
-            $queryBuilder->where($and);
+            $this->applyCriteriaToQueryBuilder($criteria, $alias, $queryBuilder);
         }
 
         if ($orderBy !== null) {
@@ -446,7 +325,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $direction = $sort->getDirection();
 
                 $queryBuilder->orderBy(
-                    $queryBuilder->expr()->$direction($getField($sort->getProperty()))
+                    $queryBuilder->expr()->$direction($this->getField($sort->getProperty(), $alias))
                 );
             }
         }
@@ -463,15 +342,139 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     }
 
     /**
-     * @param mixed $value
-     * @return string|null
+     * @param null $alias
+     * @param mixed $select
+     * @return QueryBuilder
      */
-    protected function getIdentifier($value)
+    protected function createQueryBuilder($alias = null, $select = null)
     {
-        // Sub classes can determine the identifier to use based on the provided entity.
-        $identifier = null;
+        if ($alias === null) {
+            $alias = $this->getEntityAlias();
+        }
 
-        return $identifier;
+        $queryBuilder = $this->getEntityRepository()->createQueryBuilder($alias);
+
+        if ($select !== null) {
+            $queryBuilder->select($select);
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param array $criteria
+     * @param string $alias
+     * @param QueryBuilder $queryBuilder
+     * @return QueryBuilder
+     */
+    protected function applyCriteriaToQueryBuilder(array $criteria, $alias, QueryBuilder $queryBuilder = null)
+    {
+        if ($queryBuilder === null) {
+            $queryBuilder = $this->createQueryBuilder($alias);
+        }
+
+        $and = $queryBuilder->expr()->andX();
+
+        foreach ($criteria as $field => $value) {
+            $operator = 'eq';
+
+            if ($value instanceof Filter) {
+                $filter   = $value;
+                $field    = $filter->getProperty();
+                $operator = $this->getQueryOperator($filter);
+                $value    = $filter->getValue();
+            } elseif (is_array($value)) {
+                $operator = 'in';
+            }
+
+            if (!is_callable(array($queryBuilder->expr(), $operator))) {
+                throw new Exception\RuntimeException(
+                    sprintf('Unsupported filter operator "%s"', $operator)
+                );
+            }
+
+            $conditions = $this->getConditionsForQueryCriteria($alias, $field, $operator, $value, $queryBuilder);
+
+            if (count($conditions) === 1) {
+                $and->add($conditions[0]);
+            } else {
+                // Multiple (sub-)conditions for a single field are combined with OR
+                $or = $queryBuilder->expr()->orX();
+
+                foreach ($conditions as $condition) {
+                    $or->add($condition);
+                }
+
+                $and->add($or);
+            }
+        }
+
+        $queryBuilder->where($and);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param string $alias
+     * @param string $field
+     * @param string $operator
+     * @param mixed $value
+     * @param QueryBuilder $queryBuilder
+     * @return array
+     */
+    private function getConditionsForQueryCriteria($alias, $field, $operator, $value, QueryBuilder $queryBuilder = null)
+    {
+        if ($queryBuilder === null) {
+            $queryBuilder = $this->createQueryBuilder($alias);
+        }
+
+        $entityMeta = $this->getEntityMetadata();
+
+        $isManyToManyAssociation = function ($field) use ($entityMeta) {
+            try {
+                $mapping = $entityMeta->getAssociationMapping($field);
+
+                return $mapping['type'] === DoctrineAssociationType::MANY_TO_MANY;
+            } catch (DoctrineMappingException $e) {
+                return false;
+            }
+        };
+
+        $conditions = array();
+
+        switch ($operator) {
+            // Operators without value
+            case 'isNull':
+            case 'isNotNull':
+                $conditions[] = $queryBuilder->expr()->$operator($this->getField($field, $alias));
+                break;
+            // Operators with value
+            default:
+                $param = sprintf(':%s', $this->getField($field));
+
+                // Only for many-to-many associations we have to use the MEMBER OF operation
+                if ($isManyToManyAssociation($this->getField($field)) && $operator = 'in') {
+                    /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
+
+                    if (!is_array($value)) {
+                        $value = array($value);
+                    }
+
+                    foreach ($value as $i => $v) {
+                        $p = $param . $i;
+
+                        // No query builder method yet for MEMBER OF operation
+                        $conditions[] = sprintf('%s MEMBER OF %s', $p, $this->getField($field, $alias));
+                        $queryBuilder->setParameter($p, $v);
+                    }
+                } else {
+                    $conditions[] = $queryBuilder->expr()->$operator($this->getField($field, $alias), $param);
+                    $queryBuilder->setParameter($param, $value);
+                }
+                break;
+        }
+
+        return $conditions;
     }
 
     /**
@@ -536,5 +539,72 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     protected function getEntityName()
     {
         return $this->getEntityRepository()->getClassName();
+    }
+
+    /**
+     * @param mixed $value
+     * @return string|null
+     */
+    protected function getIdentifier($value)
+    {
+        // Sub classes can determine the identifier to use based on the provided entity/value.
+        $identifier = null;
+
+        return $identifier;
+    }
+
+    /**
+     * @param mixed $value
+     * @return string|null
+     */
+    private function getIdentifierForValue($value)
+    {
+        $identifier = $this->getIdentifier($value);
+
+        // When no identifier is provided, use repository's primary (single) identifier
+        if ($identifier === null) {
+            // Only assign identifier when value matches the identifiers configured type
+            // to prevent false-positives (i.e. when providing a string and identifier is integer).
+            $expectedType = is_string($value) ? 'string' : null;
+            $expectedType = is_numeric($value) ? 'numeric' : $expectedType;
+
+            if ($expectedType !== null) {
+                $identifier = $this->getSingleIdentifier($expectedType);
+            }
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * @param string $field
+     * @param string $alias
+     * @return string
+     */
+    private function getField($field, $alias = null)
+    {
+        $entityMeta = $this->getEntityMetadata();
+
+        $isAssociation = function ($field) use ($entityMeta) {
+            return in_array($field, $entityMeta->getAssociationNames());
+        };
+
+        $convertSnakeToCamel = function ($input) {
+            return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
+        };
+
+        // The field might be named after the column (snake case)..
+        try {
+            $field = $entityMeta->getFieldForColumn($field);
+        } catch (DoctrineMappingException $e) {
+            // It might also be an association
+            $camelField = $convertSnakeToCamel($field);
+
+            if ($isAssociation($camelField)) {
+                $field = $camelField;
+            }
+        }
+
+        return $alias === null ? $field : sprintf('%s.%s', $alias, $field);
     }
 }
