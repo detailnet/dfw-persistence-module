@@ -10,6 +10,7 @@ use MongoRegex;
 //use Doctrine\ORM\Mapping\MappingException as DoctrineMappingException;
 //use Doctrine\ORM\Mapping\ClassMetadataInfo as DoctrineAssociationType;
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Query\Builder as QueryBuilder;
 
 use Zend\Paginator\Adapter\Callback as CallbackPaginatorAdapter;
 
@@ -121,33 +122,10 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
         $limit = null,
         $offset = null
     ) {
-        $dm = $this->repository->getDocumentManager();
-        $queryBuilder = $dm->createQueryBuilder($this->repository->getDocumentName());
+        $queryBuilder = $this->createQueryBuilder();
 
         if ($criteria !== null && count($criteria) > 0) {
-            foreach ($criteria as $field => $value) {
-                $operator = is_array($value) ? 'in' : 'equals';
-
-                if ($value instanceof Filter) {
-                    $filter = $value;
-                    $field = $filter->getProperty();
-                    $operator = $this->getQueryOperator($filter);
-                    $value = $filter->getValue();
-                }
-
-                if ($operator === 'regex') {
-                    $operator = 'equals';
-                    $value = new MongoRegex(sprintf('/%s/', $value));
-                }
-
-                if (!is_callable(array($queryBuilder, $operator))) {
-                    throw new Exception\RuntimeException(
-                        sprintf('Unsupported filter operator "%s"', $operator)
-                    );
-                }
-
-                $queryBuilder->field($this->getField($field))->$operator($value);
-            }
+            $this->applyCriteriaToQueryBuilder($criteria, $queryBuilder);
         }
 
         if ($orderBy !== null) {
@@ -165,6 +143,53 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
         }
 
         return $queryBuilder->getQuery();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    protected function createQueryBuilder()
+    {
+        $dm = $this->repository->getDocumentManager();
+        return $dm->createQueryBuilder($this->repository->getDocumentName());
+    }
+
+    /**
+     * @param array $criteria
+     * @param QueryBuilder $queryBuilder
+     * @return QueryBuilder
+     */
+    protected function applyCriteriaToQueryBuilder(array $criteria, QueryBuilder $queryBuilder = null)
+    {
+        if ($queryBuilder === null) {
+            $queryBuilder = $this->createQueryBuilder();
+        }
+
+        foreach ($criteria as $field => $value) {
+            $operator = is_array($value) ? 'in' : 'equals';
+
+            if ($value instanceof Filter) {
+                $filter = $value;
+                $field = $filter->getProperty();
+                $operator = $this->getQueryOperator($filter);
+                $value = $filter->getValue();
+            }
+
+            if ($operator === 'regex') {
+                $operator = 'equals';
+                $value = new MongoRegex(sprintf('/%s/', $value));
+            }
+
+            if (!is_callable(array($queryBuilder, $operator))) {
+                throw new Exception\RuntimeException(
+                    sprintf('Unsupported filter operator "%s"', $operator)
+                );
+            }
+
+            $queryBuilder->field($this->getField($field))->$operator($value);
+        }
+
+        return $queryBuilder;
     }
 
     /**
