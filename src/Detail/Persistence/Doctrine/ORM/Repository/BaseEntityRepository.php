@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Core\WebModule\Repository;
+namespace Detail\Persistence\Doctrine\ORM\Repository;
 
 use Traversable;
 

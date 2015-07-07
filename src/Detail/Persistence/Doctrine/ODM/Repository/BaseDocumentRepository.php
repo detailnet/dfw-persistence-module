@@ -1,6 +1,6 @@
 <?php
 
-namespace Detail\Persistence\Doctrine;
+namespace Detail\Persistence\Doctrine\ODM\Repository;
 
 use MongoRegex;
 
