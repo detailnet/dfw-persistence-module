@@ -45,8 +45,13 @@ class Module implements
                 );
             }
 
-            DoctrineOrmTypes\Type::addType(DoctrineUuidType::NAME, DoctrineUuidType::CLASS);
-            DoctrineOdmTypes\Type::registerType(DoctrineOdmUuidType::NAME, DoctrineOdmUuidType::CLASS);
+            if (class_exists(DoctrineOrmTypes\Type::CLASS)) {
+                DoctrineOrmTypes\Type::addType(DoctrineUuidType::NAME, DoctrineUuidType::CLASS);
+            }
+
+            if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
+                DoctrineOdmTypes\Type::registerType(DoctrineOdmUuidType::NAME, DoctrineOdmUuidType::CLASS);
+            }
         }
 
 //        /** @var \Zend\ServiceManager\ServiceManager $serviceManager */
