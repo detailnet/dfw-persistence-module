@@ -5,13 +5,17 @@ php:
   - 5.6
   - hhvm
 
+env:
+  - MONGO_VERSION=stable
+
 matrix:
     allow_failures:
         - php: hhvm
 
 before_script:
+  - yes '' | pecl -q install -f mongo-${MONGO_VERSION} && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - composer self-update
-  - composer install --dev --prefer-source --no-interaction
+  - composer install --prefer-source --no-interaction
 
 script:
   - php vendor/bin/phpunit -c travis.phpunit.xml
