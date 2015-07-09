@@ -198,6 +198,39 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     }
 
     /**
+     * Get entities by identifier for a given return type.
+     *
+     * Note that the order of the returned entities may not match the provided order.
+     *
+     * @param mixed $values Entity identifier or the entity (or a listing of those)
+     * @param boolean $returnType "collection" or "single"
+     * @return mixed
+     */
+    public function getByIdentifiersForType($values, $returnType = null)
+    {
+        if (empty($values) // No need to look up entities when none are provided
+            || ($returnType == self::RETURN_TYPE_COLLECTION && !is_array($values))
+            || ($returnType == self::RETURN_TYPE_SINGLE && !(is_scalar($values) || is_object($values)))
+        ) {
+            // Default to empty array for now (we're handling the type below)
+            $entities = array();
+        } else {
+            $entities = $this->getByIdentifiers($values);
+        }
+
+        // Respect (or cast to) type when returning value
+        switch ($returnType) {
+            case self::RETURN_TYPE_COLLECTION:
+                return $entities;
+            case self::RETURN_TYPE_SINGLE:
+                return count($entities) > 0 ? reset($entities) : null;
+            default:
+                // Let's guess...
+                return is_array($values) ? $entities : null;
+        }
+    }
+
+    /**
      * @param array $criteria
      * @return int
      */
