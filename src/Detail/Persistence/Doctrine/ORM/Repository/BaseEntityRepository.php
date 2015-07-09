@@ -419,7 +419,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      * @param QueryBuilder $queryBuilder
      * @return array
      */
-    private function getConditionsForQueryCriteria($alias, $field, $operator, $value, QueryBuilder $queryBuilder = null)
+    protected function getConditionsForQueryCriteria($alias, $field, $operator, $value, QueryBuilder $queryBuilder = null)
     {
         if ($queryBuilder === null) {
             $queryBuilder = $this->createQueryBuilder($alias);
