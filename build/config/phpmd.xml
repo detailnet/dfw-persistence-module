@@ -35,6 +35,7 @@
         <exclude name="TooManyMethods"/>
         <exclude name="ExcessiveClassComplexity"/>
         <exclude name="NPathComplexity"/>
+        <exclude name="CyclomaticComplexity"/>
     </rule>
     <rule ref="rulesets/codesize.xml/TooManyMethods">
         <properties>
@@ -49,6 +50,11 @@
     <rule ref="rulesets/codesize.xml/NPathComplexity">
         <properties>
             <property name="minimum" value="300" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="15" />
         </properties>
     </rule>
 
