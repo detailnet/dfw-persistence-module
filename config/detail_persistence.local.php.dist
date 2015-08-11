@@ -4,6 +4,12 @@ return array(
     'detail_persistence' => array(
         'doctrine' => array(
             'register_uuid_type' => true,
+            'caches' => array(
+                // Use any name for the cache, e.g. "redis"
+                'doctrine.cache.change-me' => array(
+                    'storage' => 'change-me', // Use name as set in Zend's options (caches.*), e.g. "doctrine"
+                ),
+            ),
         ),
     ),
 );

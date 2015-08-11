@@ -35,6 +35,7 @@
         "detailnet/dfw-commanding": "~0.2.3",
         "detailnet/dfw-filtering": "~0.1.0",
         "zendframework/zend-paginator": "2.*",
+        "doctrine/doctrine-module": "~0.8",
         "doctrine/orm": "~2.4",
         "doctrine/mongodb-odm": "1.0.*@dev",
         "ramsey/uuid": "~2.8.1"
@@ -43,6 +44,7 @@
         "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
         "detailnet/dfw-filtering": "For usage of the Doctrine ORM/ODM based repositories",
         "zendframework/zend-paginator": "For usage of the Doctrine ORM/ODM based repositories",
+        "doctrine/doctrine-module": "For usage of the Doctrine/Zend Cache bridge",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",
         "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type"
