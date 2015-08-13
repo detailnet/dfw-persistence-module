@@ -17,6 +17,11 @@ class DoctrineOptions extends AbstractOptions
     protected $caches = array();
 
     /**
+     * @var Doctrine\SQLProfilerOptions[]
+     */
+    protected $sqlProfilers = array();
+
+    /**
      * @return boolean
      */
     public function registerUuidType()
@@ -46,6 +51,22 @@ class DoctrineOptions extends AbstractOptions
     public function setCaches(array $caches)
     {
         $this->caches = $this->createOptions($caches, Doctrine\CacheOptions::CLASS);
+    }
+
+    /**
+     * @return Doctrine\SQLProfilerOptions[]
+     */
+    public function getSqlProfilers()
+    {
+        return $this->sqlProfilers;
+    }
+
+    /**
+     * @param Doctrine\SQLProfilerOptions[] $sqlProfilers
+     */
+    public function setSqlProfilers(array $sqlProfilers)
+    {
+        $this->sqlProfilers = $this->createOptions($sqlProfilers, Doctrine\SQLProfilerOptions::CLASS);
     }
 
     /**

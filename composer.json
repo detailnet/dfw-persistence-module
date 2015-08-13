@@ -34,6 +34,7 @@
         "satooshi/php-coveralls": "dev-master",
         "detailnet/dfw-commanding": "~0.2.3",
         "detailnet/dfw-filtering": "~0.1.0",
+        "detailnet/dfw-log-module": "~0.2.1",
         "zendframework/zend-paginator": "2.*",
         "doctrine/doctrine-module": "~0.8",
         "doctrine/orm": "~2.5",
@@ -43,6 +44,7 @@
     "suggest": {
         "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
         "detailnet/dfw-filtering": "For usage of the Doctrine ORM/ODM based repositories",
+        "detailnet/dfw-log-module": "For logging the SQL profiler output to a log file",
         "zendframework/zend-paginator": "For usage of the Doctrine ORM/ODM based repositories",
         "doctrine/doctrine-module": "For usage of the Doctrine/Zend Cache bridge",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",

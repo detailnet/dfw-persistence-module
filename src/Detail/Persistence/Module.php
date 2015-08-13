@@ -17,7 +17,9 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 //use Zend\ServiceManager\Config as ServiceConfig;
 //use Zend\ServiceManager\ServiceManager;
 
+use Detail\Persistence\Doctrine\DBAL\Profiling\SQLProfiler;
 use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
+use Detail\Persistence\Listener\SQLProfilerLoggingListener;
 
 class Module implements
     AutoloaderProviderInterface,
@@ -28,14 +30,13 @@ class Module implements
     public function onBootstrap(MvcEvent $event)
     {
         $this->bootstrapDoctrine($event);
+        $this->bootstrapProfiling($event);
     }
 
     public function bootstrapDoctrine(MvcEvent $event)
     {
-        $serviceManager = $event->getApplication()->getServiceManager();
-
-        /** @var Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceManager->get(__NAMESPACE__ . '\Options\ModuleOptions');
+//        $serviceManager = $event->getApplication()->getServiceManager();
+        $moduleOptions = $this->getModuleOptions($event);
 
         if ($moduleOptions->getDoctrine()->registerUuidType()) {
             if (!class_exists('Rhumsaa\Uuid\Uuid')) {
@@ -60,6 +61,38 @@ class Module implements
 //        /** @var \Doctrine\ORM\EntityManager $entityManager */
 //        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
 //        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('db_mytype', 'mytype');
+    }
+
+    public function bootstrapProfiling(MvcEvent $event)
+    {
+        $services = $event->getApplication()->getServiceManager();
+        $profilers = $this->getModuleOptions($event)->getDoctrine()->getSqlProfilers();
+
+        if (count($profilers) === 0) {
+            return;
+        }
+
+        foreach ($profilers as $profilerName => $profilerOptions) {
+            $loggerName = $profilerOptions->getLogger();
+
+            if ($loggerName !== null) {
+                if (!$services->has($loggerName)) {
+                    throw new Exception\ConfigException(
+                        sprintf('Logger "%s" does not exist for profiler "%s"', $loggerName, $profilerName)
+                    );
+                }
+
+                /** @var SQLProfiler $profiler */
+                $profiler = $services->get($profilerName);
+                /** @var \Psr\Log\LoggerInterface $logger */
+                $logger = $services->get($loggerName);
+
+                $listener = new SQLProfilerLoggingListener($profiler, $logger);
+
+                $event->getApplication()->getEventManager()->attachAggregate($listener);
+            }
+        }
+//
     }
 
     /**
@@ -94,5 +127,19 @@ class Module implements
     public function getServiceConfig()
     {
         return array();
+    }
+
+    /**
+     * @param MvcEvent $event
+     * @return Options\ModuleOptions
+     */
+    protected function getModuleOptions(MvcEvent $event)
+    {
+        $services = $event->getApplication()->getServiceManager();
+
+        /** @var Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $services->get(__NAMESPACE__ . '\Options\ModuleOptions');
+
+        return $moduleOptions;
     }
 }

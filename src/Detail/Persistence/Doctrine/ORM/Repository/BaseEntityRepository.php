@@ -84,7 +84,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     {
         $paginatorAdapter = new CallbackPaginatorAdapter(
             function () use ($criteria, $orderBy, $limit, $offset) {
-                return $this->createSelectQuery(null, $criteria, $orderBy, $limit, $offset)->getResult();
+                return $this->createSelectQuery(null, $criteria, $orderBy, $limit, $offset, true)->getResult();
             },
             function () use ($criteria) {
                 return $this->size($criteria);
@@ -120,6 +120,8 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             $queryBuilder->orWhere(sprintf('%s.%s IN (:p%s)', $alias, $key, ++$identifierIndex))
                 ->setParameter('p' . $identifierIndex, $values);
         }
+
+        $queryBuilder->setCacheable(true);
 
         return $queryBuilder->getQuery()->execute();
     }
@@ -334,6 +336,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      * @param array $orderBy
      * @param int $limit
      * @param int $offset
+     * @param boolean $cacheable
      * @return \Doctrine\ORM\Query
      */
     protected function createSelectQuery(
@@ -341,7 +344,8 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         array $criteria = null,
         array $orderBy = null,
         $limit = null,
-        $offset = null
+        $offset = null,
+        $cacheable = false
     ) {
         $alias = $this->getEntityAlias();
         $queryBuilder = $this->createQueryBuilder($alias, $select);
@@ -367,6 +371,8 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         if ($offset !== null) {
             $queryBuilder->setFirstResult($offset);
         }
+
+        $queryBuilder->setCacheable($cacheable);
 
         return $queryBuilder->getQuery();
     }

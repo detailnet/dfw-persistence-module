@@ -10,6 +10,13 @@ return array(
                     'storage' => 'change-me', // Use name as set in Zend's options (caches.*), e.g. "doctrine"
                 ),
             ),
+            'sql_profilers' => array(
+                // Use any name for the profiler. This will be the name of the profiler in the service manager.
+                'Detail\Persistence\ORMDefaultProfiler' => array(
+                    'name' => 'orm_default', // Doctrine connection name
+                    'logger' => 'Monolog\Logger', // Name of the logger in the service
+                ),
+            ),
         ),
     ),
 );

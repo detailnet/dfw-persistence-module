@@ -4,6 +4,7 @@ return array(
     'service_manager' => array(
         'abstract_factories' => array(
             'Detail\Persistence\Factory\Doctrine\CachesFactory',
+            'Detail\Persistence\Factory\Doctrine\SQLProfilerFactory',
         ),
         'aliases' => array(
         ),
