@@ -42,7 +42,7 @@ trait TranslatableTrait
      */
     public function __call($method, array $arguments)
     {
-        $triggerError = function() use ($method) {
+        $triggerError = function () use ($method) {
             // Simulate PHP's original behavior for undefined methods
             trigger_error(
                 sprintf('Call to undefined method %s::%s()', get_class($this), $method),
