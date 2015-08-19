@@ -38,6 +38,7 @@
         "doctrine/doctrine-module": "~0.8",
         "doctrine/orm": "~2.5",
         "doctrine/mongodb-odm": "1.0.*@dev",
+        "knplabs/doctrine-behaviors": "~1.1",
         "ramsey/uuid": "~2.8.1"
     },
     "suggest": {
@@ -47,6 +48,7 @@
         "doctrine/doctrine-module": "For usage of the Doctrine/Zend Cache bridge",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",
+        "knplabs/doctrine-behaviors": "For usage of the classes for translating Doctrine entities",
         "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type"
     },
     "autoload": {
