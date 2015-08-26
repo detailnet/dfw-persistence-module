@@ -98,7 +98,7 @@ trait TranslatableTrait
     {
         $texts = array();
 
-        foreach ($this->getTranslations() as $locale => $translation) {
+        foreach ($this->getTranslations() as $translation) {
             $text = call_user_func(array($translation, $method));
 
             if ($text !== null) {
