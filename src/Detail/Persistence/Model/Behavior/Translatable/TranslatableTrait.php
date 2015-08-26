@@ -17,7 +17,7 @@ trait TranslatableTrait
      */
     public function getTranslation($locale)
     {
-        return $this->getTranslations()->get($locale);
+        return $this->getTranslations()->get((string) $locale);
     }
 
     /**
@@ -26,7 +26,7 @@ trait TranslatableTrait
      */
     public function hasTranslation($locale)
     {
-        return $this->getTranslation($locale) !== null;
+        return $this->getTranslation((string) $locale) !== null;
     }
 
     /**
@@ -54,11 +54,6 @@ trait TranslatableTrait
         // Note that we're removing this first argument from the array for later...
         $locale = array_shift($arguments);
 
-        if (!is_string($locale)) {
-            /** @todo Add support for current/default locale */
-            $triggerError();
-        }
-
         // Let's see if we have a translation for given locale
         if (!$this->hasTranslation($locale)) {
             $triggerError();
@@ -76,7 +71,27 @@ trait TranslatableTrait
     }
 
     /**
-     * @param $method
+     * @param string $method
+     * @param TranslationText[] $texts
+     */
+    protected function setTranslationTexts($method, array $texts)
+    {
+        foreach ($texts as $text) {
+            if (!$this->hasTranslation($text->getLocale())) {
+                // Create the translation
+                $this->createAndAddTranslation($text->getLocale());
+            }
+
+            // Update the translation using the magic setter
+            call_user_func_array(
+                array($this, $method),
+                array((string) $text->getLocale(), $text->getValue())
+            );
+        }
+    }
+
+    /**
+     * @param string $method
      * @return TranslationText[]
      */
     protected function getTranslationTexts($method)
@@ -87,7 +102,7 @@ trait TranslatableTrait
             $text = call_user_func(array($translation, $method));
 
             if ($text !== null) {
-                $texts[] = $this->createTranslationText($locale, $text);
+                $texts[] = $this->createTranslationText($translation->getLocale(), $text);
             }
         }
 
@@ -131,4 +146,10 @@ trait TranslatableTrait
     {
         return new TranslationText($locale, $value);
     }
+
+    /**
+     * @param string $locale
+     * @return TranslationInterface
+     */
+    abstract protected function createAndAddTranslation($locale);
 }
