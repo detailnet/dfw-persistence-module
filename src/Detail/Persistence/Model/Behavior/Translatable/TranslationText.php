@@ -2,7 +2,8 @@
 
 namespace Detail\Persistence\Model\Behavior\Translatable;
 
-class TranslationText
+class TranslationText implements
+    TranslationTextInterface
 {
     /**
      * @var string
