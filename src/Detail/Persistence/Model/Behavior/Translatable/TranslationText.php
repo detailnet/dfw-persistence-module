@@ -2,6 +2,8 @@
 
 namespace Detail\Persistence\Model\Behavior\Translatable;
 
+use Detail\Persistence\Model\TranslationTextInterface;
+
 class TranslationText implements
     TranslationTextInterface
 {
