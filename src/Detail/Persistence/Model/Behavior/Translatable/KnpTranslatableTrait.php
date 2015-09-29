@@ -4,6 +4,8 @@ namespace Detail\Persistence\Model\Behavior\Translatable;
 
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
+use Detail\Persistence\Model\TranslationInterface;
+
 trait KnpTranslatableTrait
 {
     /**

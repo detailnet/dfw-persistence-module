@@ -4,6 +4,8 @@ namespace Detail\Persistence\Model\Behavior\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Detail\Persistence\Model\TranslationInterface;
+
 trait TranslatableTrait
 {
     /**

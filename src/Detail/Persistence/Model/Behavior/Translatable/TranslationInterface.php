@@ -2,13 +2,13 @@
 
 namespace Detail\Persistence\Model\Behavior\Translatable;
 
-interface TranslationInterface
-{
-    /**
-     * @return string
-     */
-    public function getLocale();
+use Detail\Persistence\Model\TranslationInterface as ModelTranslationInterface;
 
+/**
+ * @deprecated Use Detail\Persistence\Model\TranslationInterface instead
+ */
+interface TranslationInterface extends ModelTranslationInterface
+{
 //    /**
 //     * @param TranslatableInterface $translatable
 //     * @return void
