@@ -12,6 +12,11 @@ class DoctrineOptions extends AbstractOptions
     protected $registerUuidType = false;
 
     /**
+     * @var boolean
+     */
+    protected $registerDatetimeNoTzType = false;
+
+    /**
      * @var Doctrine\CacheOptions[]
      */
     protected $caches = array();
@@ -30,6 +35,22 @@ class DoctrineOptions extends AbstractOptions
     public function setRegisterUuidType($registerUuidType)
     {
         $this->registerUuidType = (boolean) $registerUuidType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function registerDatetimeNoTzType()
+    {
+        return $this->registerDatetimeNoTzType;
+    }
+
+    /**
+     * @param boolean $registerDatetimeNoTzType
+     */
+    public function setRegisterDatetimeNoTzType($registerDatetimeNoTzType)
+    {
+        $this->registerDatetimeNoTzType = (boolean) $registerDatetimeNoTzType;
     }
 
     /**

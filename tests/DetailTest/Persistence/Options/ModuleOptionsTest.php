@@ -20,7 +20,7 @@ class ModuleOptionsTest extends OptionsTestCase
         );
     }
 
-    public function testDoctrineCanBeSet()
+    public function testDoctrineRegisterTypeCanBeSet()
     {
         $doctrine = array('register_uuid_type' => true);
 
@@ -30,5 +30,17 @@ class ModuleOptionsTest extends OptionsTestCase
         $this->options->setDoctrine($doctrine);
 
         $this->assertTrue($this->options->getDoctrine()->registerUuidType());
+    }
+
+    public function testDoctrineDatetimeNoTzTypeCanBeSet()
+    {
+        $doctrine = array('register_datetime_no_tz_type' => true);
+
+        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
+        $this->assertFalse($this->options->getDoctrine()->registerDatetimeNoTzType());
+
+        $this->options->setDoctrine($doctrine);
+
+        $this->assertTrue($this->options->getDoctrine()->registerDatetimeNoTzType());
     }
 }

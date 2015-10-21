@@ -18,6 +18,7 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 //use Zend\ServiceManager\ServiceManager;
 
 use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
+use Detail\Persistence\Doctrine\ODM\Types\DatetimeNoTzType as DoctrineOdmDateTimeNoTzType;
 
 class Module implements
     AutoloaderProviderInterface,
@@ -51,6 +52,12 @@ class Module implements
 
             if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
                 DoctrineOdmTypes\Type::registerType(DoctrineOdmUuidType::NAME, DoctrineOdmUuidType::CLASS);
+            }
+        }
+
+        if ($moduleOptions->getDoctrine()->registerDatetimeNoTzType()) {
+            if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
+                DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeNoTzType::NAME, DoctrineOdmDateTimeNoTzType::CLASS);
             }
         }
 
