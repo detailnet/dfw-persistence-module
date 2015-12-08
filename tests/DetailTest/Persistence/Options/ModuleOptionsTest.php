@@ -43,4 +43,16 @@ class ModuleOptionsTest extends OptionsTestCase
 
         $this->assertTrue($this->options->getDoctrine()->registerDatetimeNoTzType());
     }
+
+    public function testDoctrineDatetimeImmutableNoTzTypeCanBeSet()
+    {
+        $doctrine = array('register_datetime_immutable_no_tz_type' => true);
+
+        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
+        $this->assertFalse($this->options->getDoctrine()->registerDatetimeImmutableNoTzType());
+
+        $this->options->setDoctrine($doctrine);
+
+        $this->assertTrue($this->options->getDoctrine()->registerDatetimeImmutableNoTzType());
+    }
 }

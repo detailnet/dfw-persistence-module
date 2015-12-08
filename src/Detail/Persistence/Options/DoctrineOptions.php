@@ -17,6 +17,11 @@ class DoctrineOptions extends AbstractOptions
     protected $registerDatetimeNoTzType = false;
 
     /**
+     * @var boolean
+     */
+    protected $registerDatetimeImmutableNoTzType = false;
+
+    /**
      * @var Doctrine\CacheOptions[]
      */
     protected $caches = array();
@@ -51,6 +56,22 @@ class DoctrineOptions extends AbstractOptions
     public function setRegisterDatetimeNoTzType($registerDatetimeNoTzType)
     {
         $this->registerDatetimeNoTzType = (boolean) $registerDatetimeNoTzType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function registerDatetimeImmutableNoTzType()
+    {
+        return $this->registerDatetimeImmutableNoTzType;
+    }
+
+    /**
+     * @param boolean $registerDatetimeImmutableNoTzType
+     */
+    public function setRegisterDatetimeImmutableNoTzType($registerDatetimeImmutableNoTzType)
+    {
+        $this->registerDatetimeImmutableNoTzType = (boolean) $registerDatetimeImmutableNoTzType;
     }
 
     /**
