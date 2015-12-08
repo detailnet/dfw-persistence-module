@@ -80,6 +80,4 @@ class DatetimeNoTzType extends DateType
     {
         return \DateTime::createFromFormat('U', $seconds, new \DateTimeZone('UTC'));
     }
-
-
 }
