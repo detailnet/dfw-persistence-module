@@ -2,7 +2,7 @@
 
 namespace DetailTest\Persistence\Options;
 
-class ModuleOptionsTest extends OptionsTestCase
+class DoctrineOptionsTest extends OptionsTestCase
 {
     /**
      * @var \Detail\Persistence\Options\ModuleOptions
