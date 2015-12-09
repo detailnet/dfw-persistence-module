@@ -19,8 +19,7 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
 use Detail\Persistence\Doctrine\ODM\Types\DatetimeNoTzType as DoctrineOdmDateTimeNoTzType;
-use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableNoTzType as DoctrineOdmDateTimeImmutableNoTzType;
-
+use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableNoTzType as DoctrineOdmDateTimeImmutNoTzType;
 
 class Module implements
     AutoloaderProviderInterface,
@@ -65,7 +64,7 @@ class Module implements
 
         if ($moduleOptions->getDoctrine()->registerDatetimeImmutableNoTzType()) {
             if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
-                DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeImmutableNoTzType::NAME, DoctrineOdmDateTimeImmutableNoTzType::CLASS);
+                DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeImmutNoTzType::NAME, DoctrineOdmDateTimeImmutNoTzType::CLASS);
             }
         }
 
