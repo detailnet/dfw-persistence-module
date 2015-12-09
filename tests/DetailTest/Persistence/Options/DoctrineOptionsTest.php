@@ -2,57 +2,44 @@
 
 namespace DetailTest\Persistence\Options;
 
+use Detail\Persistence\Options\DoctrineOptions;
+
 class DoctrineOptionsTest extends OptionsTestCase
 {
     /**
-     * @var \Detail\Persistence\Options\ModuleOptions
+     * @var DoctrineOptions
      */
     protected $options;
 
     protected function setUp()
     {
-        $this->options = $this->getOptions(
-            'Detail\Persistence\Options\ModuleOptions',
-            array(
-                'getDoctrine',
-                'setDoctrine',
-            )
-        );
+        $this->options = new DoctrineOptions();
     }
 
-    public function testDoctrineRegisterTypeCanBeSet()
+    public function testDoctrineRegisterUuidTypeCanBeSet()
     {
-        $doctrine = array('register_uuid_type' => true);
+        $this->assertFalse($this->options->registerUuidType());
 
-        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
-        $this->assertFalse($this->options->getDoctrine()->registerUuidType());
+        $this->options->setRegisterUuidType(true);
 
-        $this->options->setDoctrine($doctrine);
-
-        $this->assertTrue($this->options->getDoctrine()->registerUuidType());
+        $this->assertTrue($this->options->registerUuidType());
     }
 
     public function testDoctrineDatetimeNoTzTypeCanBeSet()
     {
-        $doctrine = array('register_datetime_no_tz_type' => true);
+        $this->assertFalse($this->options->registerDatetimeNoTzType());
 
-        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
-        $this->assertFalse($this->options->getDoctrine()->registerDatetimeNoTzType());
+        $this->options->setRegisterDatetimeNoTzType(true);
 
-        $this->options->setDoctrine($doctrine);
-
-        $this->assertTrue($this->options->getDoctrine()->registerDatetimeNoTzType());
+        $this->assertTrue($this->options->registerDatetimeNoTzType());
     }
 
     public function testDoctrineDatetimeImmutableNoTzTypeCanBeSet()
     {
-        $doctrine = array('register_datetime_immutable_no_tz_type' => true);
+        $this->assertFalse($this->options->registerDatetimeImmutableNoTzType());
 
-        $this->assertInstanceOf('Detail\Persistence\Options\DoctrineOptions', $this->options->getDoctrine());
-        $this->assertFalse($this->options->getDoctrine()->registerDatetimeImmutableNoTzType());
+        $this->options->setRegisterDatetimeImmutableNoTzType(true);
 
-        $this->options->setDoctrine($doctrine);
-
-        $this->assertTrue($this->options->getDoctrine()->registerDatetimeImmutableNoTzType());
+        $this->assertTrue($this->options->registerDatetimeImmutableNoTzType());
     }
 }
