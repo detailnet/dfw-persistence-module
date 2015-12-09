@@ -9,12 +9,17 @@ class DoctrineOptions extends AbstractOptions
     /**
      * @var boolean
      */
-    protected $registerUuidType = false;
+    protected $regUuidType = false;
 
     /**
      * @var boolean
      */
-    protected $registerDatetimeNoTzType = false;
+    protected $regDatetimeNoTzType = false;
+
+    /**
+     * @var boolean
+     */
+    protected $regDatetimeImmutableNoTzType = false;
 
     /**
      * @var Doctrine\CacheOptions[]
@@ -26,15 +31,15 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerUuidType()
     {
-        return $this->registerUuidType;
+        return $this->regUuidType;
     }
 
     /**
-     * @param boolean $registerUuidType
+     * @param boolean $regUuidType
      */
-    public function setRegisterUuidType($registerUuidType)
+    public function setRegisterUuidType($regUuidType)
     {
-        $this->registerUuidType = (boolean) $registerUuidType;
+        $this->regUuidType = (boolean) $regUuidType;
     }
 
     /**
@@ -42,15 +47,31 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerDatetimeNoTzType()
     {
-        return $this->registerDatetimeNoTzType;
+        return $this->regDatetimeNoTzType;
     }
 
     /**
-     * @param boolean $registerDatetimeNoTzType
+     * @param boolean $regDatetimeNoTzType
      */
-    public function setRegisterDatetimeNoTzType($registerDatetimeNoTzType)
+    public function setRegisterDatetimeNoTzType($regDatetimeNoTzType)
     {
-        $this->registerDatetimeNoTzType = (boolean) $registerDatetimeNoTzType;
+        $this->regDatetimeNoTzType = (boolean) $regDatetimeNoTzType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function registerDatetimeImmutableNoTzType()
+    {
+        return $this->regDatetimeImmutableNoTzType;
+    }
+
+    /**
+     * @param boolean $regDatetimeImmutableNoTzType
+     */
+    public function setRegisterDatetimeImmutableNoTzType($regDatetimeImmutableNoTzType)
+    {
+        $this->regDatetimeImmutableNoTzType = (boolean) $regDatetimeImmutableNoTzType;
     }
 
     /**

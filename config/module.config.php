@@ -21,6 +21,7 @@ return array(
         'doctrine' => array(
             'register_uuid_type' => false,
             'register_datetime_no_tz_type' => false,
+            'register_datetime_immutable_no_tz' => false,
             'caches' => array(),
         ),
     ),
