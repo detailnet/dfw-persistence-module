@@ -218,6 +218,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
             Filter::OPERATOR_GREATER_THAN           => 'gt',
             Filter::OPERATOR_NOT_EQUALS             => 'notEqual',
             Filter::OPERATOR_IN                     => 'in',
+            Filter::OPERATOR_NOT_IN                 => 'notIn',
             Filter::OPERATOR_LIKE                   => 'regex',
         );
 

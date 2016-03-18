@@ -483,7 +483,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $param = sprintf(':%s', $this->getField($field));
 
                 // Only for many-to-many associations we have to use the MEMBER OF operation
-                if ($isManyToManyAssociation($this->getField($field)) && $operator = 'in') {
+                if ($isManyToManyAssociation($this->getField($field)) && in_array(array('in', 'notIn'), $operator)) {
                     /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
 
                     if (!is_array($value)) {
@@ -494,7 +494,12 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                         $p = $param . $i;
 
                         // No query builder method yet for MEMBER OF operation
-                        $conditions[] = sprintf('%s MEMBER OF %s', $p, $this->getField($field, $alias));
+                        $conditions[] = sprintf(
+                            '%s %sMEMBER OF %s',
+                            $p,
+                            $operator == 'notIn' ? 'NOT ' : '',
+                            $this->getField($field, $alias)
+                        );
                         $queryBuilder->setParameter($p, $v);
                     }
                 } else {
@@ -533,6 +538,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             Filter::OPERATOR_GREATER_THAN           => 'gt',
             Filter::OPERATOR_NOT_EQUALS             => 'neq',
             Filter::OPERATOR_IN                     => 'in',
+            Filter::OPERATOR_NOT_IN                 => 'notIn',
             Filter::OPERATOR_LIKE                   => 'like',
         );
 

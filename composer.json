@@ -32,7 +32,7 @@
         "squizlabs/php_codesniffer" : "~2.3",
         "phpmd/phpmd": "~2.2",
         "satooshi/php-coveralls": "dev-master",
-        "detailnet/dfw-commanding": "~0.2.3",
+        "detailnet/dfw-commanding": "~0.5.0",
         "detailnet/dfw-filtering": "~0.1.0",
         "zendframework/zend-paginator": "2.*",
         "doctrine/doctrine-module": "~0.8",
