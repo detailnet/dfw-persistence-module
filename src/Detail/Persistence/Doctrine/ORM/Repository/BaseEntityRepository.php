@@ -483,7 +483,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $param = sprintf(':%s', $this->getField($field));
 
                 // Only for many-to-many associations we have to use the MEMBER OF operation
-                if ($isManyToManyAssociation($this->getField($field)) && in_array(array('in', 'notIn'), $operator)) {
+                if ($isManyToManyAssociation($this->getField($field)) && in_array($operator, array('in', 'notIn'))) {
                     /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
 
                     if (!is_array($value)) {
