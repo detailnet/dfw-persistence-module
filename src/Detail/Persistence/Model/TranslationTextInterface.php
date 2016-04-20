@@ -2,13 +2,8 @@
 
 namespace Detail\Persistence\Model;
 
-interface TranslationTextInterface
+interface TranslationTextInterface extends TranslationInterface
 {
-    /**
-     * @return string
-     */
-    public function getLocale();
-
     /**
      * @return string
      */
