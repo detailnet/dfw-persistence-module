@@ -27,6 +27,20 @@ class DatetimeImmutableNoTzType extends DatetimeNoTzType
 
     public static function craftDateTime($seconds, $microseconds = 0)
     {
-        return \DateTimeImmutable::createFromFormat('U', $seconds, new \DateTimeZone('UTC'));
+        // Override \Doctrine\ODM\MongoDB\Types\DateType::craftDateTime to return a DateTimeImmutable object
+        // in the 'UTC' timezone instead the current PHP one (date_default_timezone_get())
+        $datetime = new \DateTimeImmutable();
+        $datetime->setTimezone(new \DateTimeZone('UTC'));
+        $datetime->setTimestamp($seconds);
+
+        if ($microseconds > 0) {
+            $datetime = \DateTimeImmutable::createFromFormat(
+                'Y-m-d H:i:s.u',
+                $datetime->format('Y-m-d H:i:s') . '.' . $microseconds,
+                new \DateTimeZone('UTC')
+            );
+        }
+
+        return $datetime;
     }
 }
