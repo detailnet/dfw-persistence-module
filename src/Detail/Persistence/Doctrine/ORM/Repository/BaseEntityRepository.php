@@ -400,7 +400,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $alias = $this->getEntityAlias();
         $query = $this->createQuery($alias, $select);
 
-        if ($criteria !== null && count($criteria) > 0) {;
+        if ($criteria !== null && count($criteria) > 0) {
             $this->applyCriteriaToQuery($query, $criteria);
         }
 
