@@ -75,35 +75,14 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 
     /**
      * @param array $criteria
-     * @param array $orderBy
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
      * @return CollectionInterface
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $paginatorAdapter = new CallbackPaginatorAdapter(
-            function () use ($criteria, $orderBy, $limit, $offset) {
-                return $this->createSelectQuery(null, $criteria, $orderBy, $limit, $offset)->getResult();
-            },
-            function () use ($criteria) {
-                return $this->size($criteria);
-            }
-        );
-
-        $collectionClass = $this->getCollectionClass();
-
-        if (!class_exists($collectionClass)) {
-            throw new Exception\RuntimeException(
-                sprintf('Collection class "%s" does not exist', $collectionClass)
-            );
-        }
-
-        /** @todo Check if collection class implements pagination (Zend\Paginator\Paginator) */
-
-        $collection = new $collectionClass($paginatorAdapter);
-
-        return $collection;
+        return $this->getPaginatedCollection($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -114,7 +93,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     {
         $identifierIndex = 0;
         $alias = $this->getEntityAlias();
-        $queryBuilder = $this->getEntityRepository()->createQueryBuilder($alias);
+        $queryBuilder = $this->createQuery($alias);
 
         foreach ($identifiers as $key => $values) {
             $queryBuilder->orWhere(sprintf('%s.%s IN (:p%s)', $alias, $key, ++$identifierIndex))
@@ -135,11 +114,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     public function getByIdentifiers($values)
     {
         $entities = array();
-        $metadata = $this->getEntityMetadata();
+        $meta = $this->getEntityMetadata();
         $identifiers = array();
 
         // Group provided values by identifier they belong to
-        $addIdentifier = function ($key, $value) use (&$identifiers, $metadata) {
+        $addIdentifier = function ($key, $value) use (&$identifiers, $meta) {
             /** @todo If it's no scalar, cast to string */
 
 //            if (!is_scalar($value)) {
@@ -153,12 +132,12 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 //            }
 
             if (!array_key_exists($key, $identifiers)) {
-                if (!$metadata->hasField($key)) {
+                if (!$meta->hasField($key)) {
                     throw new Exception\RuntimeException(
                         sprintf(
                             'Identifier "%s" is not a field of %s',
                             $key,
-                            $metadata->name
+                            $meta->name
                         )
                     );
                 }
@@ -174,7 +153,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         }
 
         foreach ($values as $value) {
-            if (is_a($value, $metadata->name)) {
+            if (is_a($value, $meta->name)) {
                 // If already instance of resulting type, pass trough without query to db
                 $entities[] = $value;
                 continue;
@@ -232,14 +211,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 
     /**
      * @param array $criteria
-     * @return int
+     * @return integer
      */
     public function size(array $criteria = array())
     {
-        $alias = $this->getEntityAlias();
-        $query = $this->createSelectQuery(sprintf('count(%s)', $alias), $criteria);
-
-        return (int) $query->getSingleScalarResult();
+        return $this->getCount($criteria);
     }
 
     public function beginTransaction()
@@ -266,15 +242,15 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     public function getSingleIdentifier($expectedType = null)
     {
         $identifier = null;
-        $metadata = $this->getEntityMetadata();
+        $meta = $this->getEntityMetadata();
         $typesConstraintsMapping = array(
             'numeric' => array('integer', 'smallint', 'bigint'),
             'string' => array('string', 'text', 'guid'),
         );
 
-        if (!$metadata->isIdentifierComposite) {
-            $primaryIdentifier = $metadata->getSingleIdentifierFieldName();
-            $mapping = $metadata->getFieldMapping($primaryIdentifier);
+        if (!$meta->isIdentifierComposite) {
+            $primaryIdentifier = $meta->getSingleIdentifierFieldName();
+            $mapping = $meta->getFieldMapping($primaryIdentifier);
 
             // Only assign identifier when $expectedType matches the mapping type
             if ((!array_key_exists($expectedType, $typesConstraintsMapping))
@@ -300,7 +276,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 
 //      Alternative without using the entity manager
 //        $alias        = $this->getEntityAlias();
-//        $queryBuilder = $this->getEntityRepository()->createQueryBuilder($alias);
+//        $queryBuilder = $this->getEntityRepository()->createQuery($alias);
 //
 //        $queryBuilder->delete();
 //
@@ -329,12 +305,90 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     }
 
     /**
-     * @param string $select
-     * @param array $criteria
-     * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
-     * @return \Doctrine\ORM\Query
+     * @param array|QueryBuilder $criteria
+     * @return integer
+     */
+    protected function getCount($criteria)
+    {
+        $alias = $this->getEntityAlias();
+        $query = $this->getSelectQuery(sprintf('count(%s)', $alias), $criteria);
+
+        return (int) $query->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param array|QueryBuilder $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @return CollectionInterface
+     */
+    protected function getPaginatedCollection($criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $paginatorAdapter = new CallbackPaginatorAdapter(
+            function () use ($criteria, $orderBy, $limit, $offset) {
+                return $this->getSelectQuery(null, $criteria, $orderBy, $limit, $offset)->getQuery()->getResult();
+            },
+            function () use ($criteria) {
+                return $this->getCount($criteria);
+            }
+        );
+
+        $collectionClass = $this->getCollectionClass();
+
+        if (!class_exists($collectionClass)) {
+            throw new Exception\RuntimeException(
+                sprintf('Collection class "%s" does not exist', $collectionClass)
+            );
+        }
+
+        /** @todo Check if collection class implements pagination (Zend\Paginator\Paginator) */
+
+        $collection = new $collectionClass($paginatorAdapter);
+
+        return $collection;
+    }
+
+    /**
+     * @param string|null $select
+     * @param array|QueryBuilder|null $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @return QueryBuilder
+     */
+    protected function getSelectQuery(
+        $select = null,
+        $criteria = null,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+        if ($criteria instanceof QueryBuilder) {
+            // Always work with a clone
+            $query = clone $criteria;
+
+            if ($select !== null) {
+                $query->select($select);
+            }
+        } elseif (is_array($criteria) || is_null($criteria)) {
+            $query = $this->createSelectQuery($select, $criteria, $orderBy, $limit, $offset);
+        } else {
+            throw new Exception\InvalidArgumentException(
+                sprintf('Criteria must be an array of %s object', QueryBuilder::CLASS)
+            );
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param string|null $select
+     * @param array|null $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @return QueryBuilder
      */
     protected function createSelectQuery(
         $select = null,
@@ -344,39 +398,39 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $offset = null
     ) {
         $alias = $this->getEntityAlias();
-        $queryBuilder = $this->createQueryBuilder($alias, $select);
+        $query = $this->createQuery($alias, $select);
 
-        if ($criteria !== null && count($criteria) > 0) {
-            $this->applyCriteriaToQueryBuilder($criteria, $alias, $queryBuilder);
+        if ($criteria !== null && count($criteria) > 0) {;
+            $this->applyCriteriaToQuery($query, $criteria);
         }
 
         if ($orderBy !== null) {
             foreach ($this->getOrderBy($orderBy) as $sort) {
                 $direction = $sort->getDirection();
 
-                $queryBuilder->orderBy(
-                    $queryBuilder->expr()->$direction($this->getField($sort->getProperty(), $alias))
+                $query->orderBy(
+                    $query->expr()->$direction($this->getField($sort->getProperty(), $alias))
                 );
             }
         }
 
         if ($limit !== null) {
-            $queryBuilder->setMaxResults($limit);
+            $query->setMaxResults($limit);
         }
 
         if ($offset !== null) {
-            $queryBuilder->setFirstResult($offset);
+            $query->setFirstResult($offset);
         }
 
-        return $queryBuilder->getQuery();
+        return $query;
     }
 
     /**
-     * @param null $alias
-     * @param mixed $select
+     * @param string|null $alias
+     * @param string|null $select
      * @return QueryBuilder
      */
-    protected function createQueryBuilder($alias = null, $select = null)
+    protected function createQuery($alias = null, $select = null)
     {
         if ($alias === null) {
             $alias = $this->getEntityAlias();
@@ -392,18 +446,12 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     }
 
     /**
+     * @param QueryBuilder $query
      * @param array $criteria
-     * @param string $alias
-     * @param QueryBuilder $queryBuilder
-     * @return QueryBuilder
      */
-    protected function applyCriteriaToQueryBuilder(array $criteria, $alias, QueryBuilder $queryBuilder = null)
+    protected function applyCriteriaToQuery(QueryBuilder $query, array $criteria)
     {
-        if ($queryBuilder === null) {
-            $queryBuilder = $this->createQueryBuilder($alias);
-        }
-
-        $and = $queryBuilder->expr()->andX();
+        $and = $query->expr()->andX();
 
         foreach ($criteria as $field => $value) {
             $operator = 'eq';
@@ -417,19 +465,19 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $operator = 'in';
             }
 
-            if (!is_callable(array($queryBuilder->expr(), $operator))) {
+            if (!is_callable(array($query->expr(), $operator))) {
                 throw new Exception\RuntimeException(
                     sprintf('Unsupported filter operator "%s"', $operator)
                 );
             }
 
-            $conditions = $this->getConditionsForQueryCriteria($alias, $field, $operator, $value, $queryBuilder);
+            $conditions = $this->getConditionsForQueryCriteria($query, $field, $operator, $value);
 
             if (count($conditions) === 1) {
                 $and->add($conditions[0]);
             } else {
                 // Multiple (sub-)conditions for a single field are combined with OR
-                $or = $queryBuilder->expr()->orX();
+                $or = $query->expr()->orX();
 
                 foreach ($conditions as $condition) {
                     $or->add($condition);
@@ -439,30 +487,24 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             }
         }
 
-        $queryBuilder->where($and);
-
-        return $queryBuilder;
+        $query->where($and);
     }
 
     /**
-     * @param string $alias
+     * @param QueryBuilder $query
      * @param string $field
      * @param string $operator
      * @param mixed $value
-     * @param QueryBuilder $queryBuilder
      * @return array
      */
-    protected function getConditionsForQueryCriteria($alias, $field, $operator, $value, QueryBuilder $queryBuilder = null)
+    protected function getConditionsForQueryCriteria(QueryBuilder $query, $field, $operator, $value)
     {
-        if ($queryBuilder === null) {
-            $queryBuilder = $this->createQueryBuilder($alias);
-        }
+        $alias = $this->getEntityAlias();
+        $meta = $this->getEntityMetadata();
 
-        $entityMeta = $this->getEntityMetadata();
-
-        $isManyToManyAssociation = function ($field) use ($entityMeta) {
+        $isManyToManyAssociation = function ($field) use ($meta) {
             try {
-                $mapping = $entityMeta->getAssociationMapping($field);
+                $mapping = $meta->getAssociationMapping($field);
 
                 return $mapping['type'] === DoctrineAssociationType::MANY_TO_MANY;
             } catch (DoctrineMappingException $e) {
@@ -476,7 +518,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             // Operators without value
             case 'isNull':
             case 'isNotNull':
-                $conditions[] = $queryBuilder->expr()->$operator($this->getField($field, $alias));
+                $conditions[] = $query->expr()->$operator($this->getField($field, $alias));
                 break;
             // Operators with value
             default:
@@ -500,11 +542,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                             $operator == 'notIn' ? 'NOT ' : '',
                             $this->getField($field, $alias)
                         );
-                        $queryBuilder->setParameter($p, $v);
+                        $query->setParameter($p, $v);
                     }
                 } else {
-                    $conditions[] = $queryBuilder->expr()->$operator($this->getField($field, $alias), $param);
-                    $queryBuilder->setParameter($param, $value);
+                    $conditions[] = $query->expr()->$operator($this->getField($field, $alias), $param);
+                    $query->setParameter($param, $value);
                 }
                 break;
         }
@@ -593,7 +635,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      * @param mixed $value
      * @return string|null
      */
-    private function getIdentifierForValue($value)
+    protected function getIdentifierForValue($value)
     {
         $identifier = $this->getIdentifier($value);
 
@@ -617,12 +659,12 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      * @param string $alias
      * @return string
      */
-    private function getField($field, $alias = null)
+    protected function getField($field, $alias = null)
     {
-        $entityMeta = $this->getEntityMetadata();
+        $meta = $this->getEntityMetadata();
 
-        $isAssociation = function ($field) use ($entityMeta) {
-            return in_array($field, $entityMeta->getAssociationNames());
+        $isAssociation = function ($field) use ($meta) {
+            return in_array($field, $meta->getAssociationNames());
         };
 
         $convertSnakeToCamel = function ($input) {
@@ -631,7 +673,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 
         // The field might be named after the column (snake case)..
         try {
-            $field = $entityMeta->getFieldForColumn($field);
+            $field = $meta->getFieldForColumn($field);
         } catch (DoctrineMappingException $e) {
             // It might also be an association
             $camelField = $convertSnakeToCamel($field);
