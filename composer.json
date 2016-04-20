@@ -39,7 +39,7 @@
         "doctrine/orm": "~2.5",
         "doctrine/mongodb-odm": "1.0.*@dev",
         "knplabs/doctrine-behaviors": "~1.1",
-        "ramsey/uuid": "~2.8.1"
+        "ramsey/uuid": "~2.8"
     },
     "suggest": {
         "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
