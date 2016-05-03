@@ -313,6 +313,10 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $alias = $this->getEntityAlias();
         $query = $this->getSelectQuery(sprintf('count(%s)', $alias), $criteria);
 
+        // Make sure there's no incompatible limit and/or offset (one row is enough for the count)
+        $query->setMaxResults(1);  // Limit
+        $query->setFirstResult(0); // Offset
+
         return (int) $query->getQuery()->getSingleScalarResult();
     }
 
