@@ -77,7 +77,6 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
 
                 // Return as array of documents (and not the cursor)
                 return $results->toArray(false);
-
             },
             function () use ($criteria) {
                 return $this->size($criteria);
@@ -177,7 +176,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
 
             if ($operator === 'regex') {
                 $operator = 'equals';
-                $value = new MongoRegex(sprintf('/%s/', $value));
+                $value = new MongoRegex(sprintf('/%s/i', $value));
             }
 
             if (!is_callable(array($queryBuilder, $operator))) {
