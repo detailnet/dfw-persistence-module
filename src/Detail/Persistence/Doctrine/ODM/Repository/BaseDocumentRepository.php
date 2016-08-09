@@ -177,7 +177,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
 
             if ($operator === 'regex') {
                 $operator = 'equals';
-                $value = new MongoRegex(sprintf('/%s/', $value));
+                $value = new MongoRegex(sprintf('/%s/i', $value));
             }
 
             if (!is_callable(array($queryBuilder, $operator))) {
