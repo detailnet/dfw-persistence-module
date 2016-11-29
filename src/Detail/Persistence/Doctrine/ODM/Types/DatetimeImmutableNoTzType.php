@@ -2,8 +2,6 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Types;
 
-use Doctrine\ODM\MongoDB\Types\DateType;
-
 class DatetimeImmutableNoTzType extends DatetimeNoTzType
 {
     /**

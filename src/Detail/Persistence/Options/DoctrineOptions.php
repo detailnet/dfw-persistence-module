@@ -14,6 +14,11 @@ class DoctrineOptions extends AbstractOptions
     /**
      * @var boolean
      */
+    protected $regDatetimeImmutableType = false;
+
+    /**
+     * @var boolean
+     */
     protected $regDatetimeNoTzType = false;
 
     /**
@@ -40,6 +45,22 @@ class DoctrineOptions extends AbstractOptions
     public function setRegisterUuidType($regUuidType)
     {
         $this->regUuidType = (boolean) $regUuidType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function registerDatetimeImmutableType()
+    {
+        return $this->regDatetimeImmutableType;
+    }
+
+    /**
+     * @param boolean $regDatetimeImmutableType
+     */
+    public function setRegisterDatetimeImmutableType($regDatetimeImmutableType)
+    {
+        $this->regDatetimeImmutableType = (boolean) $regDatetimeImmutableType;
     }
 
     /**
