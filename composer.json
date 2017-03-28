@@ -1,13 +1,13 @@
 {
     "name": "detailnet/dfw-persistence-module",
-    "description": "Zend Framework 2 Module for Doctrine based persistence",
+    "description": "Zend Framework Module for Doctrine based persistence",
     "type": "library",
     "keywords": [
         "dfw",
         "detailnet",
         "doctrine",
         "module",
-        "zf2",
+        "zf",
         "persistence"
     ],
     "homepage": "https://github.com/detailnet/dfw-persistence-module/",
@@ -18,28 +18,31 @@
             "email": "ivan.wolf@detailnet.ch"
         }
     ],
+    "provide": {
+        "ext-mongo": "*"
+    },
     "require": {
-        "php": ">=5.5.0",
-        "zendframework/zend-config": "2.*",
-        "zendframework/zend-loader": "2.*",
-        "zendframework/zend-modulemanager": "2.*",
-        "zendframework/zend-mvc": "2.*",
-        "zendframework/zend-servicemanager": "2.*",
-        "detailnet/dfw-core": "~0.2"
+        "php": "^7.0",
+        "zendframework/zend-config": "^2.6",
+        "zendframework/zend-loader": "^2.5.1",
+        "zendframework/zend-modulemanager": "^2.7.2",
+        "zendframework/zend-mvc": "^3.0.1",
+        "zendframework/zend-servicemanager": "^3.1",
+        "detailnet/dfw-core": "^0.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.6",
-        "squizlabs/php_codesniffer" : "~2.3",
-        "phpmd/phpmd": "~2.2",
-        "satooshi/php-coveralls": "dev-master",
-        "detailnet/dfw-commanding": "~0.5.0",
-        "detailnet/dfw-filtering": "~0.1.0",
-        "zendframework/zend-paginator": "2.*",
-        "doctrine/doctrine-module": "~0.8",
-        "doctrine/orm": "~2.5",
-        "doctrine/mongodb-odm": "1.0.*@dev",
-        "knplabs/doctrine-behaviors": "~1.1",
-        "ramsey/uuid": "~2.8"
+        "phpunit/phpunit": "^6.0",
+        "squizlabs/php_codesniffer" : "^2.2",
+        "phpmd/phpmd": "^2.2",
+        "satooshi/php-coveralls": "^1.0",
+        "detailnet/dfw-commanding": "^1.0",
+        "detailnet/dfw-filtering": "^1.0",
+        "zendframework/zend-paginator": "^2.7",
+        "doctrine/doctrine-module": "^1.2",
+        "doctrine/orm": "^2.5",
+        "doctrine/mongodb-odm": "^1.1",
+        "ramsey/uuid": "^3.4",
+        "ramsey/uuid-doctrine": "^1.2"
     },
     "suggest": {
         "detailnet/dfw-commanding": "For usage of the Doctrine ORM/ODM based repositories",
@@ -48,7 +51,7 @@
         "doctrine/doctrine-module": "For usage of the Doctrine/Zend Cache bridge",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",
-        "knplabs/doctrine-behaviors": "For usage of the classes for translating Doctrine entities",
+        "alcaeus/mongo-php-adapter": "For usage of the Doctrine ODM based repository (until doctrine-mongo-odm is ported to ext-mongodb)",
         "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type"
     },
     "autoload": {

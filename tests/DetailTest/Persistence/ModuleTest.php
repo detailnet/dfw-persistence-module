@@ -2,7 +2,9 @@
 
 namespace DetailTest\Persistence;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+
+use Zend\Loader\StandardAutoloader;
 
 use Detail\Persistence\Module;
 
@@ -24,9 +26,11 @@ class ModuleTest extends TestCase
 
         $this->assertTrue(is_array($config));
 
-        $this->assertArrayHasKey('Zend\Loader\StandardAutoloader', $config);
-        $this->assertArrayHasKey('namespaces', $config['Zend\Loader\StandardAutoloader']);
-        $this->assertArrayHasKey('Detail\Persistence', $config['Zend\Loader\StandardAutoloader']['namespaces']);
+        $autoloaderClass = StandardAutoloader::CLASS;
+
+        $this->assertArrayHasKey($autoloaderClass, $config);
+        $this->assertArrayHasKey('namespaces', $config[$autoloaderClass]);
+        $this->assertArrayHasKey('Detail\Persistence', $config[$autoloaderClass]['namespaces']);
     }
 
     public function testModuleProvidesConfig()

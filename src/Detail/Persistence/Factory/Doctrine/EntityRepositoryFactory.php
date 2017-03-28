@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 use Detail\Persistence\Repository\EntityRepositoryInterface;
 use Detail\Persistence\Exception;
@@ -10,10 +10,10 @@ use Detail\Persistence\Exception;
 abstract class EntityRepositoryFactory extends BaseRepositoryFactory
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return EntityRepositoryInterface
      */
-    public function createRepository(ServiceLocatorInterface $serviceLocator)
+    public function createRepository(ContainerInterface $container)
     {
         $entityName = $this->getEntityName();
         $repositoryName = $this->getRepositoryName();
@@ -25,7 +25,7 @@ abstract class EntityRepositoryFactory extends BaseRepositoryFactory
         }
 
         /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+        $entityManager = $container->get('Doctrine\ORM\EntityManager');
         $entityRepository = $entityManager->getRepository($entityName);
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadata $metadata */
