@@ -5,7 +5,8 @@ namespace Detail\Persistence\Doctrine\ODM\Id;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Id\AbstractIdGenerator;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class UuidGenerator extends AbstractIdGenerator
 {
@@ -14,7 +15,7 @@ class UuidGenerator extends AbstractIdGenerator
      *
      * @param \Doctrine\ODM\MongoDB\DocumentManager $dm
      * @param object $document
-     * @return Uuid
+     * @return UuidInterface
      */
     public function generate(DocumentManager $dm, $document)
     {

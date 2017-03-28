@@ -2,6 +2,10 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Types;
 
+use DateTime;
+use DateTimeZone;
+use MongoDate;
+
 use Doctrine\ODM\MongoDB\Types\DateType;
 
 class DatetimeNoTzType extends DateType
@@ -19,15 +23,18 @@ class DatetimeNoTzType extends DateType
      */
     public function convertToDatabaseValue($value)
     {
-        if ($value === null || $value instanceof \MongoDate) {
+        if ($value === null || $value instanceof MongoDate) {
             return $value;
         }
 
         $datetime = static::cloneDate(static::getDateTime($value), 'UTC');
 
-        return new \MongoDate($datetime->format('U'), $datetime->format('u'));
+        return new MongoDate($datetime->format('U'), $datetime->format('u'));
     }
 
+    /**
+     * @return string
+     */
     public function closureToMongo()
     {
         return 'if ($value === null || $value instanceof \MongoDate) {
@@ -53,6 +60,9 @@ class DatetimeNoTzType extends DateType
         return static::cloneDate(static::getDateTime($value));
     }
 
+    /**
+     * @return string
+     */
     public function closureToPHP()
     {
         return 'if ($value === null) {
@@ -63,32 +73,37 @@ class DatetimeNoTzType extends DateType
     }
 
     /**
-     * @param \DateTime $value
+     * @param DateTime $value
      * @param string|null $timezoneId
-     * @return \DateTime
+     * @return DateTime
      */
     public static function cloneDate($value, $timezoneId = null)
     {
         if ($timezoneId !== null) {
-            return new \DateTime($value->format('Y-m-d H:i:s'), new \DateTimeZone($timezoneId));
+            return new DateTime($value->format('Y-m-d H:i:s'), new DateTimeZone($timezoneId));
         } else {
-            return new \DateTime($value->format('Y-m-d H:i:s'));
+            return new DateTime($value->format('Y-m-d H:i:s'));
         }
     }
 
+    /**
+     * @param integer $seconds
+     * @param integer $microseconds
+     * @return DateTime
+     */
     public static function craftDateTime($seconds, $microseconds = 0)
     {
         // Override \Doctrine\ODM\MongoDB\Types\DateType::craftDateTime to return a DateTime object
         // in the 'UTC' timezone instead the current PHP one (date_default_timezone_get())
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone('UTC'));
+        $datetime = new DateTime();
+        $datetime->setTimezone(new DateTimeZone('UTC'));
         $datetime->setTimestamp($seconds);
 
         if ($microseconds > 0) {
-            $datetime = \DateTime::createFromFormat(
+            $datetime = DateTime::createFromFormat(
                 'Y-m-d H:i:s.u',
                 $datetime->format('Y-m-d H:i:s') . '.' . $microseconds,
-                new \DateTimeZone('UTC')
+                new DateTimeZone('UTC')
             );
         }
 

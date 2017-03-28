@@ -1,4 +1,4 @@
-# Zend Framework 2 Module for Doctrine based persistence
+# Zend Framework Module for Doctrine based persistence
 
 [![Build Status](https://travis-ci.org/detailnet/dfw-persistence-module.svg?branch=master)](https://travis-ci.org/detailnet/dfw-persistence-module)
 [![Coverage Status](https://img.shields.io/coveralls/detailnet/dfw-persistence-module.svg)](https://coveralls.io/r/detailnet/dfw-persistence-module)
@@ -6,10 +6,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/detailnet/dfw-persistence-module/v/unstable.svg)](https://packagist.org/packages/detailnet/dfw-persistence-module)
 
 ## Introduction
-This module provides useful classes for building a [Zend Framework 2](https://github.com/zendframework/zf2) application with a persistance layer based on [Doctrine](https://github.com/doctrine).
+This module provides useful classes for building a [Zend Framework](https://github.com/zendframework/zendframework) application with a persistance layer based on [Doctrine](https://github.com/doctrine).
 
 ## Requirements
-[Zend Framework 2 Skeleton Application](http://www.github.com/zendframework/ZendSkeletonApplication) (or compatible architecture)
+[Zend Framework Skeleton Application](http://www.github.com/zendframework/ZendSkeletonApplication) (or compatible architecture)
 
 ## Installation
 Install the module through [Composer](http://getcomposer.org/) using the following steps:
@@ -21,7 +21,7 @@ Install the module through [Composer](http://getcomposer.org/) using the followi
      ```json
      {
          "require": {
-             "detailnet/dfw-persistence-module": "1.x-dev"
+             "detailnet/dfw-persistence-module": "^1.0"
          }
      }
      ```

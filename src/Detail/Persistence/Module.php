@@ -5,7 +5,8 @@ namespace Detail\Persistence;
 use Doctrine\DBAL\Types as DoctrineOrmTypes;
 use Doctrine\ODM\MongoDB\Types as DoctrineOdmTypes;
 
-use Rhumsaa\Uuid\Doctrine\UuidType as DoctrineUuidType;
+use Ramsey\Uuid\Doctrine\UuidType as DoctrineUuidType;
+use Ramsey\Uuid\Uuid;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Loader\StandardAutoloader;
@@ -28,23 +29,32 @@ class Module implements
     ControllerProviderInterface,
     ServiceProviderInterface
 {
+    /**
+     * @param MvcEvent $event
+     */
     public function onBootstrap(MvcEvent $event)
     {
         $this->bootstrapDoctrine($event);
     }
 
+    /**
+     * @param MvcEvent $event
+     */
     public function bootstrapDoctrine(MvcEvent $event)
     {
         $serviceManager = $event->getApplication()->getServiceManager();
 
         /** @var Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceManager->get(__NAMESPACE__ . '\Options\ModuleOptions');
+        $moduleOptions = $serviceManager->get(Options\ModuleOptions::CLASS);
 
         if ($moduleOptions->getDoctrine()->registerUuidType()) {
-            if (!class_exists('Rhumsaa\Uuid\Uuid')) {
+            if (!class_exists(Uuid::CLASS)) {
                 throw new Exception\RuntimeException(
-                    'Failed to register "uuid" Doctrine mapping type: ' .
-                    'Missing required class Rhumsaa\Uuid\Uuid'
+                    sprintf(
+                        'Failed to register "uuid" Doctrine mapping type: ' .
+                        'Missing required class %s',
+                        Uuid::CLASS
+                    )
                 );
             }
 

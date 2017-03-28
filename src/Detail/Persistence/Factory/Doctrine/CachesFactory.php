@@ -7,9 +7,10 @@ use Doctrine\Common\Cache\ChainCache;
 
 use DoctrineModule\Cache\ZendStorageCache;
 
+use Interop\Container\ContainerInterface;
+
 use Zend\Cache\Storage\StorageInterface;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
 use Detail\Persistence\Exception;
 use Detail\Persistence\Options\ModuleOptions;
@@ -26,21 +27,20 @@ class CachesFactory implements
     protected $lookupCache = array();
 
     /**
-     * Determine if we can create a service with name.
+     * Can the factory create an instance for the service?
      *
-     * @param ServiceLocatorInterface $services
-     * @param string $name
+     * @param ContainerInterface $container
      * @param string $requestedName
      * @return boolean
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $services, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
         if (array_key_exists($requestedName, $this->lookupCache)) {
             return $this->lookupCache[$requestedName];
         }
 
         try {
-            $this->getOptions($services, $requestedName);
+            $this->getOptions($container, $requestedName);
         } catch (Exception\ConfigException $e) {
             // There's no cache with this name set up
             $this->lookupCache[$requestedName] = false;
@@ -52,17 +52,17 @@ class CachesFactory implements
     }
 
     /**
-     * Create service with name.
+     * Create cache
      *
-     * @param ServiceLocatorInterface $services
-     * @param string $name
+     * @param ContainerInterface $container
      * @param string $requestedName
-     * @return mixed
+     * @param array|null $options
+     * @return ZendStorageCache
      */
-    public function createServiceWithName(ServiceLocatorInterface $services, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         // Note that we already checked for existence in canCreateServiceWithName()
-        $options = $this->getOptions($services, $requestedName);
+        $options = $this->getOptions($container, $requestedName);
 
         $storageName = $options->getStorage();
 
@@ -72,14 +72,14 @@ class CachesFactory implements
             );
         }
 
-        if (!$services->has($storageName)) {
+        if (!$container->has($storageName)) {
             throw new Exception\ConfigException(
                 sprintf('Cache storage "%s" does not exist for cache "%s"', $storageName, $requestedName)
             );
         }
 
         /** @var StorageInterface $storage */
-        $storage = $services->get($storageName);
+        $storage = $container->get($storageName);
         $namespace = $options->getNamespace() ?: 'DetailPersistence';
 
         $cache = new ZendStorageCache($storage);
@@ -96,14 +96,14 @@ class CachesFactory implements
     }
 
     /**
-     * @param ServiceLocatorInterface $services
-     * @param $cacheName
+     * @param ContainerInterface $container
+     * @param string $cacheName
      * @return CacheOptions
      */
-    protected function getOptions(ServiceLocatorInterface $services, $cacheName)
+    protected function getOptions(ContainerInterface $container, $cacheName)
     {
         /** @var ModuleOptions $moduleOptions */
-        $moduleOptions = $services->get(ModuleOptions::CLASS);
+        $moduleOptions = $container->get(ModuleOptions::CLASS);
         $caches = $moduleOptions->getDoctrine()->getCaches();
 
         if (!isset($caches[$cacheName])) {

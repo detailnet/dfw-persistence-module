@@ -2,9 +2,10 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Types;
 
-use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use InvalidArgumentException;
+use MongoDate;
 
 use Doctrine\ODM\MongoDB\Types\DateType;
 
@@ -18,7 +19,7 @@ class DatetimeImmutableType extends DateType
      * Supports microseconds.
      *
      * @throws InvalidArgumentException if $value is invalid
-     * @param \DateTimeInterface|\MongoDate|int|float $value
+     * @param DateTimeInterface|MongoDate|integer|float $value
      * @return DateTimeImmutable
      */
     public static function getDateTime($value)
@@ -27,20 +28,6 @@ class DatetimeImmutableType extends DateType
 
         return $dateTime instanceof DateTimeImmutable
             ? $dateTime
-            : self::createImmutableDateTimeFromMutable($dateTime);
-    }
-
-    /**
-     * @param DateTime|null $date
-     * @return DateTimeImmutable
-     */
-    private static function createImmutableDateTimeFromMutable(DateTime $date)
-    {
-        if (method_exists(DateTimeImmutable::CLASS, 'createFromMutable')) {
-            return DateTimeImmutable::createFromMutable($date);
-        }
-
-        // Fallback for PHP < 5.6
-        return new DateTimeImmutable($date->format('Y-m-d H:i:s'), $date->getTimezone());
+            : DateTimeImmutable::createFromMutable($dateTime);
     }
 }

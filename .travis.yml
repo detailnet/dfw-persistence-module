@@ -1,16 +1,11 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
-  - hhvm
+  - 7.0
+  - 7.1
 
 env:
   - MONGO_VERSION=stable
-
-matrix:
-    allow_failures:
-        - php: hhvm
 
 before_script:
   - yes '' | pecl -q install -f mongo-${MONGO_VERSION} && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`

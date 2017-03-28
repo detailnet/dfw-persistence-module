@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Types;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 
@@ -51,11 +51,17 @@ class UuidType extends Type
         return $uuid;
     }
 
+    /**
+     * @return string
+     */
     public function closureToMongo()
     {
         return 'if ($value instanceof \'' . Uuid::CLASS . '\') { $return = $value->toString(); } else { $return = $value; }';
     }
 
+    /**
+     * @return string
+     */
     public function closureToPHP()
     {
         return

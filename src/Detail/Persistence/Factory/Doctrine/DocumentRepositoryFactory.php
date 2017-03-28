@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 use Detail\Persistence\Repository\DocumentRepositoryInterface;
 use Detail\Persistence\Exception;
@@ -10,10 +10,10 @@ use Detail\Persistence\Exception;
 abstract class DocumentRepositoryFactory extends BaseRepositoryFactory
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return DocumentRepositoryInterface
      */
-    public function createRepository(ServiceLocatorInterface $serviceLocator)
+    public function createRepository(ContainerInterface $container)
     {
         $documentName = $this->getDocumentName();
         $repositoryName = $this->getRepositoryName();
@@ -25,7 +25,7 @@ abstract class DocumentRepositoryFactory extends BaseRepositoryFactory
         }
 
         /** @var \Doctrine\ODM\MongoDB\DocumentManager $documentManager */
-        $documentManager = $serviceLocator->get('doctrine.documentmanager.odm_default');
+        $documentManager = $container->get('doctrine.documentmanager.odm_default');
 
         /** @var DocumentRepositoryInterface $repository */
         $repository = new $repositoryName($documentManager->getRepository($documentName));

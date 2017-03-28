@@ -2,32 +2,36 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
+use Interop\Container\ContainerInterface;
+
 use Zend\InputFilter\InputFilterPluginManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 use Detail\Filtering\InputFilter;
 
 use Detail\Persistence\Repository\RepositoryInterface;
-use Detail\Persistence\Exception;
 
 abstract class BaseRepositoryFactory implements
     FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * Create repository
+     *
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return RepositoryInterface
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $repository = $this->createRepository($serviceLocator);
+        $repository = $this->createRepository($container);
         $repositoryFilters = $this->getRepositoryFilters();
 
         if ($repository instanceof InputFilter\FilterAwareInterface
             && count($repositoryFilters)
         ) {
             /** @var InputFilterPluginManager $inputFilters */
-            $inputFilters = $serviceLocator->get('InputFilterManager');
+            $inputFilters = $container->get('InputFilterManager');
             $filters = array();
 
             foreach ($repositoryFilters as $filterType => $filter) {
@@ -41,10 +45,10 @@ abstract class BaseRepositoryFactory implements
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return RepositoryInterface
      */
-    abstract public function createRepository(ServiceLocatorInterface $serviceLocator);
+    abstract public function createRepository(ContainerInterface $container);
 
     /**
      * @return array
@@ -55,7 +59,7 @@ abstract class BaseRepositoryFactory implements
     }
 
     /**
-     * Get fully qualified class name of the repository.
+     * Get fully qualified class name of the repository
      *
      * @return string
      */
