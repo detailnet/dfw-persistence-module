@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Options\Doctrine;
 
-use Detail\Core\Options\AbstractOptions;
+use Zend\Stdlib\AbstractOptions;
 
 class CacheOptions extends AbstractOptions
 {

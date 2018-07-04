@@ -16,7 +16,7 @@ class DoctrineOptionsTest extends OptionsTestCase
         $this->options = new DoctrineOptions();
     }
 
-    public function testDoctrineRegisterUuidTypeCanBeSet()
+    public function testDoctrineRegisterUuidTypeCanBeSet(): void
     {
         $this->assertFalse($this->options->registerUuidType());
 
@@ -25,7 +25,7 @@ class DoctrineOptionsTest extends OptionsTestCase
         $this->assertTrue($this->options->registerUuidType());
     }
 
-    public function testDoctrineDatetimeNoTzTypeCanBeSet()
+    public function testDoctrineDatetimeNoTzTypeCanBeSet(): void
     {
         $this->assertFalse($this->options->registerDatetimeNoTzType());
 
@@ -34,7 +34,7 @@ class DoctrineOptionsTest extends OptionsTestCase
         $this->assertTrue($this->options->registerDatetimeNoTzType());
     }
 
-    public function testDoctrineDatetimeImmutableNoTzTypeCanBeSet()
+    public function testDoctrineDatetimeImmutableNoTzTypeCanBeSet(): void
     {
         $this->assertFalse($this->options->registerDatetimeImmutableNoTzType());
 

@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Options;
 
-use Detail\Core\Options\AbstractOptions;
+use Zend\Stdlib\AbstractOptions;
 
 class DoctrineOptions extends AbstractOptions
 {
@@ -29,7 +29,7 @@ class DoctrineOptions extends AbstractOptions
     /**
      * @var Doctrine\CacheOptions[]
      */
-    protected $caches = array();
+    protected $caches = [];
 
     /**
      * @return boolean
@@ -118,7 +118,7 @@ class DoctrineOptions extends AbstractOptions
      */
     protected function createOptions(array $values, $class)
     {
-        $options = array();
+        $options = [];
 
         foreach ($values as $name => $config) {
             $options[$name] = new $class($config);

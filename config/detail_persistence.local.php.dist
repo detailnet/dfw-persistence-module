@@ -1,18 +1,18 @@
 <?php
 
-return array(
-    'detail_persistence' => array(
-        'doctrine' => array(
+return [
+    'detail_persistence' => [
+        'doctrine' => [
             'register_uuid_type' => true,
             'register_datetime_immutable_no_tz' => true,
             'register_datetime_immutable_type' => true,
             'register_datetime_no_tz_type' => true,
-            'caches' => array(
+            'caches' => [
                 // Use any name for the cache, e.g. "redis"
-                'doctrine.cache.change-me' => array(
+                'doctrine.cache.change-me' => [
                     'storage' => 'change-me', // Use name as set in Zend's options (caches.*), e.g. "doctrine"
-                ),
-            ),
-        ),
-    ),
-);
+                ],
+            ],
+        ],
+    ],
+];

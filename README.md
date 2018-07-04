@@ -21,7 +21,7 @@ Install the module through [Composer](http://getcomposer.org/) using the followi
      ```json
      {
          "require": {
-             "detailnet/dfw-persistence-module": "^1.0"
+             "detailnet/dfw-persistence-module": "^1.1"
          }
      }
      ```
@@ -40,6 +40,3 @@ Install the module through [Composer](http://getcomposer.org/) using the followi
 
   7. Copy `vendor/detailnet/dfw-persistence-module/config/detail_persistence.local.php.dist` into your application's
      `config/autoload` directory, rename it to `detail_persistence.local.php` and make the appropriate changes.
-
-## Usage
-tbd

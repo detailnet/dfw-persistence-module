@@ -16,16 +16,16 @@ class ModuleOptionsTest extends OptionsTestCase
     {
         $this->options = $this->getOptions(
             ModuleOptions::CLASS,
-            array(
+            [
                 'getDoctrine',
                 'setDoctrine',
-            )
+            ]
         );
     }
 
-    public function testDoctrineRegisterTypeCanBeSet()
+    public function testDoctrineRegisterTypeCanBeSet(): void
     {
-        $doctrine = array('register_uuid_type' => true);
+        $doctrine = ['register_uuid_type' => true];
 
         $this->assertInstanceOf(DoctrineOptions::CLASS, $this->options->getDoctrine());
         $this->assertFalse($this->options->getDoctrine()->registerUuidType());
