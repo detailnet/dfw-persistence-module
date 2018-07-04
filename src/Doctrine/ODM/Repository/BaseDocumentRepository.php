@@ -37,7 +37,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
      * @param DocumentRepository $repository
      * @param array $inputFilters
      */
-    public function __construct(DocumentRepository $repository, array $inputFilters = array())
+    public function __construct(DocumentRepository $repository, array $inputFilters = [])
     {
         parent::__construct($inputFilters);
 
@@ -102,7 +102,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
      * @param array $criteria
      * @return int
      */
-    public function size(array $criteria = array())
+    public function size(array $criteria = [])
     {
         return $this->createSelectQuery($criteria)->execute()->count();
     }
@@ -179,7 +179,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
                 $value = new MongoRegex(sprintf('/%s/i', $value));
             }
 
-            if (!is_callable(array($queryBuilder, $operator))) {
+            if (!is_callable([$queryBuilder, $operator])) {
                 throw new Exception\RuntimeException(
                     sprintf('Unsupported filter operator "%s"', $operator)
                 );
@@ -209,7 +209,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     protected function getQueryOperator(Filter $filter)
     {
         $operator = $filter->getOperator();
-        $operatorMap = array(
+        $operatorMap = [
             Filter::OPERATOR_SMALLER_THAN           => 'lt',
             Filter::OPERATOR_SMALLER_THAN_OR_EQUALS => 'lte',
             Filter::OPERATOR_EQUALS                 => 'equals',
@@ -219,7 +219,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
             Filter::OPERATOR_IN                     => 'in',
             Filter::OPERATOR_NOT_IN                 => 'notIn',
             Filter::OPERATOR_LIKE                   => 'regex',
-        );
+        ];
 
         return isset($operatorMap[$operator]) ? $operatorMap[$operator] : $operator;
     }

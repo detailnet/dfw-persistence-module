@@ -24,7 +24,7 @@ class CachesFactory implements
      *
      * @var array
      */
-    protected $lookupCache = array();
+    protected $lookupCache = [];
 
     /**
      * Can the factory create an instance for the service?
@@ -89,7 +89,7 @@ class CachesFactory implements
             $arrayCache = new ArrayCache();
             $arrayCache->setNamespace($namespace); // Use same namespace
 
-            $cache = new ChainCache(array($arrayCache, $cache));
+            $cache = new ChainCache([$arrayCache, $cache]);
         }
 
         return $cache;

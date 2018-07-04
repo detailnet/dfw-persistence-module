@@ -49,5 +49,5 @@ interface RepositoryInterface
      * @param array $criteria
      * @return integer
      */
-    public function size(array $criteria = array());
+    public function size(array $criteria = []);
 }

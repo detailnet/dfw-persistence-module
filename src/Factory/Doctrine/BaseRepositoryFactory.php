@@ -32,7 +32,7 @@ abstract class BaseRepositoryFactory implements
         ) {
             /** @var InputFilterPluginManager $inputFilters */
             $inputFilters = $container->get('InputFilterManager');
-            $filters = array();
+            $filters = [];
 
             foreach ($repositoryFilters as $filterType => $filter) {
                 $filters[$filterType] = $inputFilters->get($filter);
@@ -55,7 +55,7 @@ abstract class BaseRepositoryFactory implements
      */
     protected function getRepositoryFilters()
     {
-        return array();
+        return [];
     }
 
     /**

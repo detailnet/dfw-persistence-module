@@ -9,7 +9,7 @@ trait ObjectManagersAwareTrait
     /**
      * @var ObjectManagerInterface[]
      */
-    protected $objectManagers = array();
+    protected $objectManagers = [];
 
     /**
      * @return ObjectManagerInterface[]

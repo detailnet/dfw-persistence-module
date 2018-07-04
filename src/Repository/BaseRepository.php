@@ -20,7 +20,7 @@ abstract class BaseRepository implements
     /**
      * @param array $inputFilters
      */
-    public function __construct(array $inputFilters = array())
+    public function __construct(array $inputFilters = [])
     {
         $this->setInputFilters($inputFilters);
     }
@@ -31,7 +31,7 @@ abstract class BaseRepository implements
      */
     protected function getOrderBy(array $orderBy)
     {
-        $sorting = array();
+        $sorting = [];
 
         foreach ($orderBy as $property => $sort) {
             if (!$sort instanceof Sort) {
@@ -61,7 +61,7 @@ abstract class BaseRepository implements
                 $sort = new Sort($property, $direction);
             }
 
-            if (!in_array(strtolower($sort->getDirection()), array('asc', 'desc'))) {
+            if (!in_array(strtolower($sort->getDirection()), ['asc', 'desc'])) {
                 throw new Exception\RuntimeException(
                     sprintf('Invalid order direction "%s"', $sort->getDirection())
                 );

@@ -47,7 +47,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         EntityManager $entityManager,
         EntityRepository $repository,
         EntityMetadata $metadata,
-        array $inputFilters = array()
+        array $inputFilters = []
     ) {
         parent::__construct($inputFilters);
 
@@ -113,9 +113,9 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      */
     public function getByIdentifiers($values)
     {
-        $entities = array();
+        $entities = [];
         $meta = $this->getEntityMetadata();
-        $identifiers = array();
+        $identifiers = [];
 
         // Group provided values by identifier they belong to
         $addIdentifier = function ($key, $value) use (&$identifiers, $meta) {
@@ -142,14 +142,14 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                     );
                 }
 
-                $identifiers[$key] = array();
+                $identifiers[$key] = [];
             }
 
             $identifiers[$key][] = $value;
         };
 
         if (!is_array($values) && !($values instanceof Traversable)) {
-            $values = array($values);
+            $values = [$values];
         }
 
         foreach ($values as $value) {
@@ -192,7 +192,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             || ($returnType == self::RETURN_TYPE_SINGLE && !(is_scalar($values) || is_object($values)))
         ) {
             // Default to empty array for now (we're handling the type below)
-            $entities = array();
+            $entities = [];
         } else {
             $entities = $this->getByIdentifiers($values);
         }
@@ -213,7 +213,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
      * @param array $criteria
      * @return integer
      */
-    public function size(array $criteria = array())
+    public function size(array $criteria = [])
     {
         return $this->getCount($criteria);
     }
@@ -243,10 +243,10 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     {
         $identifier = null;
         $meta = $this->getEntityMetadata();
-        $typesConstraintsMapping = array(
-            'numeric' => array('integer', 'smallint', 'bigint'),
-            'string' => array('string', 'text', 'guid'),
-        );
+        $typesConstraintsMapping = [
+            'numeric' => ['integer', 'smallint', 'bigint'],
+            'string' => ['string', 'text', 'guid'],
+        ];
 
         if (!$meta->isIdentifierComposite) {
             $primaryIdentifier = $meta->getSingleIdentifierFieldName();
@@ -469,7 +469,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $operator = 'in';
             }
 
-            if (!is_callable(array($query->expr(), $operator))) {
+            if (!is_callable([$query->expr(), $operator])) {
                 throw new Exception\RuntimeException(
                     sprintf('Unsupported filter operator "%s"', $operator)
                 );
@@ -516,7 +516,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             }
         };
 
-        $conditions = array();
+        $conditions = [];
 
         switch ($operator) {
             // Operators without value
@@ -529,11 +529,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 $param = sprintf(':%s', $this->getField($field));
 
                 // Only for many-to-many associations we have to use the MEMBER OF operation
-                if ($isManyToManyAssociation($this->getField($field)) && in_array($operator, array('in', 'notIn'))) {
+                if ($isManyToManyAssociation($this->getField($field)) && in_array($operator, ['in', 'notIn'])) {
                     /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
 
                     if (!is_array($value)) {
-                        $value = array($value);
+                        $value = [$value];
                     }
 
                     foreach ($value as $i => $v) {
@@ -576,7 +576,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     protected function getQueryOperator(Filter $filter)
     {
         $operator = $filter->getOperator();
-        $operatorMap = array(
+        $operatorMap = [
             Filter::OPERATOR_SMALLER_THAN           => 'lt',
             Filter::OPERATOR_SMALLER_THAN_OR_EQUALS => 'lte',
             Filter::OPERATOR_EQUALS                 => 'eq',
@@ -586,7 +586,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
             Filter::OPERATOR_IN                     => 'in',
             Filter::OPERATOR_NOT_IN                 => 'notIn',
             Filter::OPERATOR_LIKE                   => 'like',
-        );
+        ];
 
         return isset($operatorMap[$operator]) ? $operatorMap[$operator] : $operator;
     }
