@@ -9,22 +9,22 @@ class DoctrineOptions extends AbstractOptions
     /**
      * @var boolean
      */
-    protected $regUuidType = false;
+    protected $registerUuidType = false;
 
     /**
      * @var boolean
      */
-    protected $regDatetimeImmutableType = false;
+    protected $registerDatetimeImmutableType = false;
 
     /**
      * @var boolean
      */
-    protected $regDatetimeNoTzType = false;
+    protected $registerDatetimeNoTzType = false;
 
     /**
      * @var boolean
      */
-    protected $regDatetimeImmutableNoTzType = false;
+    protected $registerDatetimeImmutableNoTzType = false;
 
     /**
      * @var Doctrine\CacheOptions[]
@@ -36,7 +36,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerUuidType()
     {
-        return $this->regUuidType;
+        return $this->registerUuidType;
     }
 
     /**
@@ -44,7 +44,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function setRegisterUuidType($regUuidType)
     {
-        $this->regUuidType = (boolean) $regUuidType;
+        $this->registerUuidType = (boolean) $regUuidType;
     }
 
     /**
@@ -52,7 +52,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerDatetimeImmutableType()
     {
-        return $this->regDatetimeImmutableType;
+        return $this->registerDatetimeImmutableType;
     }
 
     /**
@@ -60,7 +60,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function setRegisterDatetimeImmutableType($regDatetimeImmutableType)
     {
-        $this->regDatetimeImmutableType = (boolean) $regDatetimeImmutableType;
+        $this->registerDatetimeImmutableType = (boolean) $regDatetimeImmutableType;
     }
 
     /**
@@ -68,7 +68,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerDatetimeNoTzType()
     {
-        return $this->regDatetimeNoTzType;
+        return $this->registerDatetimeNoTzType;
     }
 
     /**
@@ -76,7 +76,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function setRegisterDatetimeNoTzType($regDatetimeNoTzType)
     {
-        $this->regDatetimeNoTzType = (boolean) $regDatetimeNoTzType;
+        $this->registerDatetimeNoTzType = (boolean) $regDatetimeNoTzType;
     }
 
     /**
@@ -84,7 +84,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function registerDatetimeImmutableNoTzType()
     {
-        return $this->regDatetimeImmutableNoTzType;
+        return $this->registerDatetimeImmutableNoTzType;
     }
 
     /**
@@ -92,7 +92,7 @@ class DoctrineOptions extends AbstractOptions
      */
     public function setRegisterDatetimeImmutableNoTzType($regDatetimeImmutableNoTzType)
     {
-        $this->regDatetimeImmutableNoTzType = (boolean) $regDatetimeImmutableNoTzType;
+        $this->registerDatetimeImmutableNoTzType = (boolean) $regDatetimeImmutableNoTzType;
     }
 
     /**
