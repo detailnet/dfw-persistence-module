@@ -50,7 +50,8 @@
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",
         "alcaeus/mongo-php-adapter": "For usage of the Doctrine ODM based repository (until doctrine-mongo-odm is ported to ext-mongodb)",
-        "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type"
+        "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type",
+        "ramsey/uuid-doctrine": "For usage of the Doctrine ORM \"uuid\" mapping type"
     },
     "autoload": {
         "psr-4": {
