@@ -185,7 +185,19 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
                 );
             }
 
-            $queryBuilder->field($this->getField($field))->$operator($value);
+            $mappedField = $this->getField($field);
+
+            // Permit to filter IN values when null is present
+            if ($operator === 'in' && in_array(null, $value, true)) {
+                $queryBuilder
+                    ->field($mappedField) // Not necessary
+                    ->addOr($queryBuilder->expr()->field($mappedField)->in($value)) // No need to filter out the null
+                    ->addOr($queryBuilder->expr()->field($mappedField)->exists(false));
+
+                continue;
+            }
+
+            $queryBuilder->field($mappedField)->$operator($value);
         }
 
         return $queryBuilder;
