@@ -506,11 +506,11 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
         $alias = $this->getEntityAlias();
         $meta = $this->getEntityMetadata();
 
-        $isManyToManyAssociation = function ($field) use ($meta) {
+        $isAssociation = function ($field, $associationType) use ($meta) {
             try {
                 $mapping = $meta->getAssociationMapping($field);
 
-                return $mapping['type'] === DoctrineAssociationType::MANY_TO_MANY;
+                return $mapping['type'] === $associationType;
             } catch (DoctrineMappingException $e) {
                 return false;
             }
@@ -526,10 +526,33 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
                 break;
             // Operators with value
             default:
+                // If many-to-one association, join association and set new alias
+                $fieldParts = explode ('.', $field);
+
+                if (count($fieldParts) === 2 /** @todo Support multiple levels, not only one */
+                    && $isAssociation($this->getField($fieldParts[0]), DoctrineAssociationType::MANY_TO_ONE)
+                ) {
+                    $alias = $fieldParts[0];
+                    $field = $fieldParts[1];
+                    $param = sprintf(':%s_%s', $alias, $field);
+
+                    // Add alias only if not already present
+                    if (!in_array($alias, $query->getAllAliases())) {
+                        $query->leftJoin(sprintf('%s.%s', $this->getEntityAlias(), $alias), $alias);
+                    }
+
+                    $conditions[] = $query->expr()->$operator($this->getField($field, $alias), $param);
+                    $query->setParameter($param, $value);
+
+                    break;
+                }
+
                 $param = sprintf(':%s', $this->getField($field));
 
                 // Only for many-to-many associations we have to use the MEMBER OF operation
-                if ($isManyToManyAssociation($this->getField($field)) && in_array($operator, ['in', 'notIn'])) {
+                if ($isAssociation($this->getField($field), DoctrineAssociationType::MANY_TO_MANY)
+                    && in_array($operator, ['in', 'notIn'])
+                ) {
                     /** @todo Make sure identifier (and not external_id) is provided for associations (in command) */
 
                     if (!is_array($value)) {
