@@ -39,6 +39,7 @@
         "doctrine/doctrine-module": "^1.2",
         "doctrine/orm": "^2.5",
         "doctrine/mongodb-odm": "^1.1",
+        "doctrine/persistence": "^1.3",
         "ramsey/uuid": "^3.4",
         "ramsey/uuid-doctrine": "^1.2"
     },
@@ -48,6 +49,7 @@
         "zendframework/zend-paginator": "For usage of the Doctrine ORM/ODM based repositories",
         "doctrine/doctrine-module": "For usage of the Doctrine/Zend Cache bridge",
         "doctrine/doctrine-orm-module": "For usage of the Doctrine ORM based repository",
+        "doctrine/doctrine/persistence": "For usage of the Doctrine ORM based repository",
         "doctrine/doctrine-mongo-odm-module": "For usage of the Doctrine ODM based repository",
         "alcaeus/mongo-php-adapter": "For usage of the Doctrine ODM based repository (until doctrine-mongo-odm is ported to ext-mongodb)",
         "ramsey/uuid": "For usage of the Doctrine ODM \"uuid\" mapping type",

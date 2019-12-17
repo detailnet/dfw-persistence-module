@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
+use Doctrine\Persistence\ObjectManager as ObjectManagerInterface;
 
 trait ObjectManagerAwareTrait
 {
