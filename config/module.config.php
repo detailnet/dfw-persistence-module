@@ -22,6 +22,7 @@ return [
             'register_datetime_immutable_no_tz_type' => false,
             'register_datetime_immutable_type' => false,
             'register_datetime_no_tz_type' => false,
+            'register_traversable_hash_type' => false,
             'caches' => [],
         ],
     ],

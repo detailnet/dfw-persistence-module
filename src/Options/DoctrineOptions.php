@@ -6,99 +6,78 @@ use Zend\Stdlib\AbstractOptions;
 
 class DoctrineOptions extends AbstractOptions
 {
-    /**
-     * @var boolean
-     */
+    /** @var bool */
     protected $registerUuidType = false;
 
-    /**
-     * @var boolean
-     */
+    /** @var bool */
     protected $registerDatetimeImmutableType = false;
 
-    /**
-     * @var boolean
-     */
+    /** @var bool */
     protected $registerDatetimeNoTzType = false;
 
-    /**
-     * @var boolean
-     */
+    /** @var bool */
     protected $registerDatetimeImmutableNoTzType = false;
 
-    /**
-     * @var Doctrine\CacheOptions[]
-     */
+    /** @var bool */
+    protected $registerTraversableHashType = false;
+
+    /** @var Doctrine\CacheOptions[] */
     protected $caches = [];
 
-    /**
-     * @return boolean
-     */
-    public function registerUuidType()
+    public function registerUuidType(): bool
     {
         return $this->registerUuidType;
     }
 
-    /**
-     * @param boolean $regUuidType
-     */
-    public function setRegisterUuidType($regUuidType)
+    public function setRegisterUuidType(bool $regUuidType)
     {
-        $this->registerUuidType = (boolean) $regUuidType;
+        $this->registerUuidType = $regUuidType;
     }
 
-    /**
-     * @return boolean
-     */
-    public function registerDatetimeImmutableType()
+    public function registerDatetimeImmutableType(): bool
     {
         return $this->registerDatetimeImmutableType;
     }
 
-    /**
-     * @param boolean $regDatetimeImmutableType
-     */
-    public function setRegisterDatetimeImmutableType($regDatetimeImmutableType)
+    public function setRegisterDatetimeImmutableType(bool $regDatetimeImmutableType)
     {
-        $this->registerDatetimeImmutableType = (boolean) $regDatetimeImmutableType;
+        $this->registerDatetimeImmutableType = $regDatetimeImmutableType;
     }
 
-    /**
-     * @return boolean
-     */
-    public function registerDatetimeNoTzType()
+    public function registerDatetimeNoTzType(): bool
     {
         return $this->registerDatetimeNoTzType;
     }
 
-    /**
-     * @param boolean $regDatetimeNoTzType
-     */
-    public function setRegisterDatetimeNoTzType($regDatetimeNoTzType)
+    public function setRegisterDatetimeNoTzType(bool $regDatetimeNoTzType)
     {
-        $this->registerDatetimeNoTzType = (boolean) $regDatetimeNoTzType;
+        $this->registerDatetimeNoTzType = $regDatetimeNoTzType;
     }
 
-    /**
-     * @return boolean
-     */
-    public function registerDatetimeImmutableNoTzType()
+    public function registerDatetimeImmutableNoTzType(): bool
     {
         return $this->registerDatetimeImmutableNoTzType;
     }
 
-    /**
-     * @param boolean $regDatetimeImmutableNoTzType
-     */
-    public function setRegisterDatetimeImmutableNoTzType($regDatetimeImmutableNoTzType)
+    public function setRegisterDatetimeImmutableNoTzType(bool $regDatetimeImmutableNoTzType)
     {
-        $this->registerDatetimeImmutableNoTzType = (boolean) $regDatetimeImmutableNoTzType;
+        $this->registerDatetimeImmutableNoTzType = $regDatetimeImmutableNoTzType;
+    }
+
+    public function registerTraversableHashType(): bool
+    {
+        return $this->registerTraversableHashType;
+    }
+
+    public function setRegisterTraversableHashType(bool $registerTraversableHashType)
+    {
+        $this->registerTraversableHashType = $registerTraversableHashType;
     }
 
     /**
      * @return Doctrine\CacheOptions[]
      */
-    public function getCaches()
+    public function getCaches(): array
     {
         return $this->caches;
     }
@@ -116,7 +95,7 @@ class DoctrineOptions extends AbstractOptions
      * @param string $class
      * @return array
      */
-    protected function createOptions(array $values, $class)
+    protected function createOptions(array $values, $class): array
     {
         $options = [];
 

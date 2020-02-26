@@ -7,6 +7,7 @@ return [
             'register_datetime_immutable_no_tz_type' => true,
             'register_datetime_immutable_type' => true,
             'register_datetime_no_tz_type' => true,
+            'register_traversable_hash_type' => true,
             'caches' => [
                 // Use any name for the cache, e.g. "redis"
                 'doctrine.cache.change-me' => [
