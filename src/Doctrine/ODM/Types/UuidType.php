@@ -46,9 +46,7 @@ class UuidType extends Type
             return $value;
         }
 
-        $uuid = Uuid::fromString($value);
-
-        return $uuid;
+        return Uuid::fromString($value);
     }
 
     /**

@@ -2,17 +2,17 @@
 
 namespace Detail\Persistence\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 
 trait ObjectManagerAwareTrait
 {
     /**
-     * @var ObjectManagerInterface
+     * @var ObjectManager
      */
     protected $objectManager;
 
     /**
-     * @return ObjectManagerInterface
+     * @return ObjectManager
      */
     public function getObjectManager()
     {
@@ -20,9 +20,9 @@ trait ObjectManagerAwareTrait
     }
 
     /**
-     * @param ObjectManagerInterface $objectManager
+     * @param ObjectManager $objectManager
      */
-    public function setObjectManager(ObjectManagerInterface $objectManager)
+    public function setObjectManager(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
     }

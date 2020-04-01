@@ -6,6 +6,7 @@ use Interop\Container\ContainerInterface;
 
 use Detail\Persistence\Repository\DocumentRepositoryInterface;
 use Detail\Persistence\Exception;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 abstract class DocumentRepositoryFactory extends BaseRepositoryFactory
 {
@@ -24,7 +25,7 @@ abstract class DocumentRepositoryFactory extends BaseRepositoryFactory
             );
         }
 
-        /** @var \Doctrine\ODM\MongoDB\DocumentManager $documentManager */
+        /** @var DocumentManager $documentManager */
         $documentManager = $container->get('doctrine.documentmanager.odm_default');
 
         /** @var DocumentRepositoryInterface $repository */

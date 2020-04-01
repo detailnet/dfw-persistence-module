@@ -6,6 +6,8 @@ use Interop\Container\ContainerInterface;
 
 use Detail\Persistence\Repository\EntityRepositoryInterface;
 use Detail\Persistence\Exception;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 abstract class EntityRepositoryFactory extends BaseRepositoryFactory
 {
@@ -24,11 +26,11 @@ abstract class EntityRepositoryFactory extends BaseRepositoryFactory
             );
         }
 
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $container->get('Doctrine\ORM\EntityManager');
         $entityRepository = $entityManager->getRepository($entityName);
 
-        /** @var \Doctrine\ORM\Mapping\ClassMetadata $metadata */
+        /** @var ClassMetadata $metadata */
         $entityMetadata = $entityManager->getClassMetadata($entityName); /** @todo Investigate if produces performance problems */
 
         /** @var EntityRepositoryInterface $repository */

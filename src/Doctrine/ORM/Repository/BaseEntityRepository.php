@@ -348,9 +348,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
 
         /** @todo Check if collection class implements pagination (Zend\Paginator\Paginator) */
 
-        $collection = new $collectionClass($paginatorAdapter);
-
-        return $collection;
+        return new $collectionClass($paginatorAdapter);
     }
 
     /**
@@ -564,9 +562,8 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     protected function getEntityAlias()
     {
         $nameParts = explode('\\', $this->getEntityName());
-        $alias = lcfirst($nameParts[count($nameParts) - 1]);
 
-        return $alias;
+        return lcfirst($nameParts[count($nameParts) - 1]);
     }
 
     /**
@@ -630,9 +627,7 @@ abstract class BaseEntityRepository extends Repository\BaseRepository implements
     protected function getIdentifier($value)
     {
         // Sub classes can determine the identifier to use based on the provided entity/value.
-        $identifier = null;
-
-        return $identifier;
+        return null;
     }
 
     /**

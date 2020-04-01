@@ -2,6 +2,8 @@
 
 namespace Detail\Persistence\Collection;
 
-interface CollectionInterface extends \IteratorAggregate
+use IteratorAggregate;
+
+interface CollectionInterface extends IteratorAggregate
 {
 }

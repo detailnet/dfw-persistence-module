@@ -13,7 +13,7 @@ class UuidGenerator extends AbstractIdGenerator
     /**
      * Generates an identifier for a document.
      *
-     * @param \Doctrine\ODM\MongoDB\DocumentManager $dm
+     * @param DocumentManager $dm
      * @param object $document
      * @return UuidInterface
      */
