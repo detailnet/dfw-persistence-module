@@ -2,6 +2,8 @@
 
 namespace Detail\Persistence;
 
+use Traversable;
+
 use Doctrine\DBAL\Types as DoctrineOrmTypes;
 use Doctrine\ODM\MongoDB\Types as DoctrineOdmTypes;
 
@@ -28,7 +30,7 @@ class Module implements
     }
 
     /**
-     * @return array|\Traversable
+     * @return array|Traversable
      */
     public function getConfig()
     {

@@ -9,8 +9,10 @@ use MongoRegex;
 //use Doctrine\ORM\Mapping\ClassMetadata as EntityMetadata;
 //use Doctrine\ORM\Mapping\MappingException as DoctrineMappingException;
 //use Doctrine\ORM\Mapping\ClassMetadataInfo as DoctrineAssociationType;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Iterator\Iterator;
+use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Query\Builder as QueryBuilder;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 use Zend\Paginator\Adapter\Callback as CallbackPaginatorAdapter;
 
@@ -72,11 +74,11 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     {
         $paginatorAdapter = new CallbackPaginatorAdapter(
             function () use ($criteria, $orderBy, $limit, $offset) {
-                /** @var \Doctrine\ODM\MongoDB\Cursor $results */
+                /** @var Iterator $results */
                 $results = $this->createSelectQuery($criteria, $orderBy, $limit, $offset)->execute();
 
-                // Return as array of documents (and not the cursor)
-                return $results->toArray(false);
+                // Return as array of documents (and not the iterator)
+                return $results->toArray();
             },
             function () use ($criteria) {
                 return $this->size($criteria);
@@ -93,9 +95,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
 
         /** @todo Check if collection class implements pagination (Zend\Paginator\Paginator) */
 
-        $collection = new $collectionClass($paginatorAdapter);
-
-        return $collection;
+        return new $collectionClass($paginatorAdapter);
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
      * @param array $orderBy
      * @param null $limit
      * @param null $offset
-     * @return \Doctrine\ODM\MongoDB\Query\Query
+     * @return Query
      * @todo Support filtering for ReferenceOne (operation: references()) and ReferenceMany (operation: includesReferenceTo())
      */
     protected function createSelectQuery(
@@ -209,9 +209,8 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     protected function getDocumentAlias()
     {
         $nameParts = explode('\\', $this->repository->getDocumentName());
-        $alias = lcfirst($nameParts[count($nameParts) - 1]);
 
-        return $alias;
+        return lcfirst($nameParts[count($nameParts) - 1]);
     }
 
     /**
