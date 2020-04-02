@@ -17,6 +17,7 @@ use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
 use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableNoTzType as DoctrineOdmDateTimeImmutNoTzType;
 use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableType as DoctrineOdmDateTimeImmutType;
 use Detail\Persistence\Doctrine\ODM\Types\DatetimeNoTzType as DoctrineOdmDateTimeNoTzType;
+use Detail\Persistence\Doctrine\ODM\Types\TraversableHashType as DoctrineOdmTraversableHashType;
 
 class Module implements
     ConfigProviderInterface
@@ -82,6 +83,12 @@ class Module implements
         if ($moduleOptions->getDoctrine()->registerDatetimeImmutableNoTzType()) {
             if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
                 DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeImmutNoTzType::NAME, DoctrineOdmDateTimeImmutNoTzType::CLASS);
+            }
+        }
+
+        if ($moduleOptions->getDoctrine()->registerTraversableHashType()) {
+            if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
+                DoctrineOdmTypes\Type::registerType(DoctrineOdmTraversableHashType::NAME, DoctrineOdmTraversableHashType::CLASS);
             }
         }
 

@@ -42,4 +42,13 @@ class DoctrineOptionsTest extends OptionsTestCase
 
         $this->assertTrue($this->options->registerDatetimeImmutableNoTzType());
     }
+
+    public function testDoctrineTraversableHashTypeCanBeSet(): void
+    {
+        $this->assertFalse($this->options->registerTraversableHashType());
+
+        $this->options->setRegisterTraversableHashType(true);
+
+        $this->assertTrue($this->options->registerTraversableHashType());
+    }
 }
