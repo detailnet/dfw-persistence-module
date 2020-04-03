@@ -19,7 +19,6 @@ return [
     'detail_persistence' => [
         'doctrine' => [
             'register_uuid_type' => false,
-            'register_datetime_immutable_type' => false,
             'caches' => [],
         ],
     ],

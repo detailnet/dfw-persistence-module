@@ -17,7 +17,7 @@ class UuidGenerator extends AbstractIdGenerator
      * @param object $document
      * @return UuidInterface
      */
-    public function generate(DocumentManager $dm, $document)
+    public function generate(DocumentManager $dm, object $document)
     {
         return Uuid::uuid4();
     }

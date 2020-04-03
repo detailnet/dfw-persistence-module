@@ -14,7 +14,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
-use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableType as DoctrineOdmDateTimeImmutType;
 
 class Module implements
     ConfigProviderInterface
@@ -62,12 +61,6 @@ class Module implements
 
             if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
                 DoctrineOdmTypes\Type::registerType(DoctrineOdmUuidType::NAME, DoctrineOdmUuidType::CLASS);
-            }
-        }
-
-        if ($moduleOptions->getDoctrine()->registerDatetimeImmutableType()) {
-            if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
-                DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeImmutType::NAME, DoctrineOdmDateTimeImmutType::CLASS);
             }
         }
 
