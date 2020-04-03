@@ -49,18 +49,12 @@ class UuidType extends Type
         return Uuid::fromString($value);
     }
 
-    /**
-     * @return string
-     */
-    public function closureToMongo()
+    public function closureToMongo(): string
     {
         return 'if ($value instanceof \'' . Uuid::CLASS . '\') { $return = $value->toString(); } else { $return = $value; }';
     }
 
-    /**
-     * @return string
-     */
-    public function closureToPHP()
+    public function closureToPHP(): string
     {
         return
             'if (empty($value)) { $return = null; } ' .

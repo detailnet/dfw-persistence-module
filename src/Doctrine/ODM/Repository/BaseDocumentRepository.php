@@ -2,7 +2,7 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Repository;
 
-use MongoRegex;
+use MongoDB\BSON\Regex;
 
 //use Doctrine\ORM\EntityManager;
 //use Doctrine\ORM\EntityRepository;
@@ -176,7 +176,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
 
             if ($operator === 'regex') {
                 $operator = 'equals';
-                $value = new MongoRegex(sprintf('/%s/i', $value));
+                $value = new Regex(sprintf('/%s/i', $value));
             }
 
             if (!is_callable([$queryBuilder, $operator])) {
