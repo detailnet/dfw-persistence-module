@@ -14,7 +14,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
-use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableType as DoctrineOdmDateTimeImmutType;
 
 class Module implements
     ConfigProviderInterface
