@@ -65,12 +65,6 @@ class Module implements
             }
         }
 
-        if ($moduleOptions->getDoctrine()->registerDatetimeImmutableType()) {
-            if (class_exists(DoctrineOdmTypes\Type::CLASS)) {
-                DoctrineOdmTypes\Type::registerType(DoctrineOdmDateTimeImmutType::NAME, DoctrineOdmDateTimeImmutType::CLASS);
-            }
-        }
-
 //        /** @var \Doctrine\ORM\EntityManager $entityManager */
 //        $entityManager = $services->get('Doctrine\ORM\EntityManager');
 //        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('db_mytype', 'mytype');
