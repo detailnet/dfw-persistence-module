@@ -78,7 +78,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
                 $results = $this->createSelectQuery($criteria, $orderBy, $limit, $offset)->execute();
 
                 // Return as array of documents (and not the iterator)
-                return $results->toArray();
+                return array_values($results->toArray());
             },
             function () use ($criteria) {
                 return $this->size($criteria);
@@ -150,6 +150,7 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     protected function createQueryBuilder()
     {
         $dm = $this->repository->getDocumentManager();
+
         return $dm->createQueryBuilder($this->repository->getDocumentName());
     }
 
@@ -221,15 +222,15 @@ abstract class BaseDocumentRepository extends Repository\BaseRepository implemen
     {
         $operator = $filter->getOperator();
         $operatorMap = [
-            Filter::OPERATOR_SMALLER_THAN           => 'lt',
+            Filter::OPERATOR_SMALLER_THAN => 'lt',
             Filter::OPERATOR_SMALLER_THAN_OR_EQUALS => 'lte',
-            Filter::OPERATOR_EQUALS                 => 'equals',
+            Filter::OPERATOR_EQUALS => 'equals',
             Filter::OPERATOR_GREATER_THAN_OR_EQUALS => 'gte',
-            Filter::OPERATOR_GREATER_THAN           => 'gt',
-            Filter::OPERATOR_NOT_EQUALS             => 'notEqual',
-            Filter::OPERATOR_IN                     => 'in',
-            Filter::OPERATOR_NOT_IN                 => 'notIn',
-            Filter::OPERATOR_LIKE                   => 'regex',
+            Filter::OPERATOR_GREATER_THAN => 'gt',
+            Filter::OPERATOR_NOT_EQUALS => 'notEqual',
+            Filter::OPERATOR_IN => 'in',
+            Filter::OPERATOR_NOT_IN => 'notIn',
+            Filter::OPERATOR_LIKE => 'regex',
         ];
 
         return isset($operatorMap[$operator]) ? $operatorMap[$operator] : $operator;
