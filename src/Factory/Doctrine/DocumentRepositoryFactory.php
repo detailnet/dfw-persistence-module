@@ -2,11 +2,10 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
-use Interop\Container\ContainerInterface;
-
-use Detail\Persistence\Repository\DocumentRepositoryInterface;
 use Detail\Persistence\Exception;
+use Detail\Persistence\Repository\DocumentRepositoryInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Interop\Container\ContainerInterface;
 
 abstract class DocumentRepositoryFactory extends BaseRepositoryFactory
 {

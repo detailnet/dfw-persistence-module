@@ -4,7 +4,6 @@ namespace Detail\Persistence\Doctrine\ODM\Id;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Id\AbstractIdGenerator;
-
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 

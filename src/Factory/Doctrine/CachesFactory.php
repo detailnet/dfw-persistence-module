@@ -2,19 +2,15 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
+use Detail\Persistence\Exception;
+use Detail\Persistence\Options\Doctrine\CacheOptions;
+use Detail\Persistence\Options\ModuleOptions;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\ChainCache;
-
 use DoctrineModule\Cache\ZendStorageCache;
-
 use Interop\Container\ContainerInterface;
-
 use Zend\Cache\Storage\StorageInterface;
 use Zend\ServiceManager\Factory\AbstractFactoryInterface;
-
-use Detail\Persistence\Exception;
-use Detail\Persistence\Options\ModuleOptions;
-use Detail\Persistence\Options\Doctrine\CacheOptions;
 
 class CachesFactory implements
     AbstractFactoryInterface

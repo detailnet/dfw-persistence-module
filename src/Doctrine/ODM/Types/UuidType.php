@@ -2,9 +2,8 @@
 
 namespace Detail\Persistence\Doctrine\ODM\Types;
 
-use Ramsey\Uuid\Uuid;
-
 use Doctrine\ODM\MongoDB\Types\Type;
+use Ramsey\Uuid\Uuid;
 
 class UuidType extends Type
 {

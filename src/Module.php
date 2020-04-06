@@ -2,19 +2,15 @@
 
 namespace Detail\Persistence;
 
-use Traversable;
-
+use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableType as DoctrineOdmDateTimeImmutType;
+use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
 use Doctrine\DBAL\Types as DoctrineOrmTypes;
 use Doctrine\ODM\MongoDB\Types as DoctrineOdmTypes;
-
 use Ramsey\Uuid\Doctrine\UuidType as DoctrineUuidType;
 use Ramsey\Uuid\Uuid;
-
-use Zend\Mvc\MvcEvent;
+use Traversable;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-
-use Detail\Persistence\Doctrine\ODM\Types\UuidType as DoctrineOdmUuidType;
-use Detail\Persistence\Doctrine\ODM\Types\DatetimeImmutableType as DoctrineOdmDateTimeImmutType;
+use Zend\Mvc\MvcEvent;
 
 class Module implements
     ConfigProviderInterface

@@ -4,10 +4,9 @@ namespace Detail\Persistence\Doctrine\ODM\Types;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\ODM\MongoDB\Types\DateType;
 use InvalidArgumentException;
 use MongoDate;
-
-use Doctrine\ODM\MongoDB\Types\DateType;
 
 class DatetimeImmutableType extends DateType
 {

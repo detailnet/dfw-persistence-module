@@ -3,9 +3,7 @@
 namespace Detail\Persistence\Repository;
 
 use Detail\Commanding\Command\Listing\Sort;
-
 use Detail\Filtering\InputFilter;
-
 use Detail\Persistence\Exception;
 
 abstract class BaseRepository implements

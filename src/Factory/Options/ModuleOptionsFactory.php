@@ -2,12 +2,10 @@
 
 namespace Detail\Persistence\Factory\Options;
 
-use Interop\Container\ContainerInterface;
-
-use Zend\ServiceManager\Factory\FactoryInterface;
-
 use Detail\Persistence\Exception\ConfigException;
 use Detail\Persistence\Options\ModuleOptions;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ModuleOptionsFactory implements
     FactoryInterface

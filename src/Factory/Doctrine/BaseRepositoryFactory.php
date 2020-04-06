@@ -2,14 +2,11 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
+use Detail\Filtering\InputFilter;
+use Detail\Persistence\Repository\RepositoryInterface;
 use Interop\Container\ContainerInterface;
-
 use Zend\InputFilter\InputFilterPluginManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
-
-use Detail\Filtering\InputFilter;
-
-use Detail\Persistence\Repository\RepositoryInterface;
 
 abstract class BaseRepositoryFactory implements
     FactoryInterface

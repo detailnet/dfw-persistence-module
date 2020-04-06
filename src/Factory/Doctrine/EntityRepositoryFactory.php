@@ -2,12 +2,11 @@
 
 namespace Detail\Persistence\Factory\Doctrine;
 
-use Interop\Container\ContainerInterface;
-
-use Detail\Persistence\Repository\EntityRepositoryInterface;
 use Detail\Persistence\Exception;
+use Detail\Persistence\Repository\EntityRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Interop\Container\ContainerInterface;
 
 abstract class EntityRepositoryFactory extends BaseRepositoryFactory
 {

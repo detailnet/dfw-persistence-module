@@ -2,22 +2,18 @@
 
 namespace Detail\Persistence\Doctrine\ORM\Repository;
 
-use Traversable;
-
+use Detail\Commanding\Command\Listing\Filter;
+use Detail\Persistence\Collection\CollectionInterface;
+use Detail\Persistence\Exception;
+use Detail\Persistence\Repository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata as EntityMetadata;
-use Doctrine\ORM\Mapping\MappingException as DoctrineMappingException;
 use Doctrine\ORM\Mapping\ClassMetadataInfo as DoctrineAssociationType;
+use Doctrine\ORM\Mapping\MappingException as DoctrineMappingException;
 use Doctrine\ORM\QueryBuilder;
-
+use Traversable;
 use Zend\Paginator\Adapter\Callback as CallbackPaginatorAdapter;
-
-use Detail\Commanding\Command\Listing\Filter;
-
-use Detail\Persistence\Collection\CollectionInterface;
-use Detail\Persistence\Repository;
-use Detail\Persistence\Exception;
 
 abstract class BaseEntityRepository extends Repository\BaseRepository implements
     Repository\EntityRepositoryInterface

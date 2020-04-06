@@ -2,11 +2,8 @@
 
 namespace DetailTest\Persistence;
 
-use PHPUnit\Framework\TestCase;
-
-use Zend\Loader\StandardAutoloader;
-
 use Detail\Persistence\Module;
+use PHPUnit\Framework\TestCase;
 
 class ModuleTest extends TestCase
 {
